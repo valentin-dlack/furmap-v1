@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    {{ form_start(registrationForm) }}
+    <section class="bg-gray-50 dark:bg-gray-900 bg-login">
+        <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+            <div
+                class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-white/10 backdrop-blur-2xl dark:border-gray-700">
+                <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                    <h1
+                        class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                        Create an account
+                    </h1>
+                    {% for message in app.flashes('success') %}
+                    <div class="alert alert-success px-4 py-3 rounded relative" role="alert">
+                        <strong class="font-bold">Success !</strong>
+                        <span class="block sm:inline">{{ message }}</span>
+                    </div>
+                    {% endfor %}
+                    {% for message in app.flashes('verify_email_error') %}
+                        <div class="alert alert-error px-4 py-3 rounded relative" role="alert">
+                            <strong class="font-bold"><i class="fa-solid fa-xmark"></i></strong>
+                            <span class="block sm:inline">{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                    {% for message in app.flashes('error') %}
+                        <div class="alert alert-error px-4 py-3 rounded relative" role="alert">
+                            <strong class="font-bold"><i class="fa-solid fa-xmark"></i></strong>
+                            <span class="block sm:inline">{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                        <div>
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
+                                email</label>
+                            {{ form_row(registrationForm.email) }}
+                        </div>
+                        <div>
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
+                                username</label>
+                            {{ form_row(registrationForm.username) }}
+                        </div>
+                        <div>
+                            <label for="password"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                                {{ form_row(registrationForm.plainPassword) }}
+                        </div>
+                        <div>
+                                {{ form_row(registrationForm.confirmPassword)}}
+                        </div>
+                        <div class="flex items-center justify-between">
+                            
+                            <div class="flex items-start">
+                                <!-- terms and conditions checkbox label -->
+                                <div class="flex items-center h-5 mt-1">
+                                    {{ form_row(registrationForm.agreeTerms) }}
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="terms" class="font-medium text-gray-700 dark:text-gray-400">I agree to
+                                        the
+                                        <a href="#"
+                                            class="text-primary-600 hover:underline dark:text-primary-500">CGU</a>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit"
+                            class="w-full btn btn-lg btn-primary">Register</button>
+                        <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                            I already have an account ! <a href="{{ path('app_login') }}"
+                                class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign in</a>
+                        </p>
+                        <input type="hidden" name="_csrf_token"
+                        value="{{ csrf_token('authenticate') }}">
+                </div>
+            </div>
+        </div>
+    </section>
+    {{ form_end(registrationForm) }}
+{% endblock %}

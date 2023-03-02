@@ -1,0 +1,169 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}ADMIN - Accueil{% endblock %}
+
+
+{% block body %}
+
+<div class="container p-5">
+    <div class="flex flex-row space-x-2 flex-wrap xl:flex-nowrap">
+        <div class="card w-full xl:w-1/2 bg-zinc-800 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">Statistiques</h2>
+                <div class="flex flex-row space-x-2">
+                    <div class="stats shadow w-1/3">
+                        <div class="stat">
+                            <div class="stat-title">Utilisateurs</div>
+                            <div class="stat-value">{{ totalUsers | number_format(0, ',', ' ') }}</div>
+                            <div class="stat-desc">{{ totalUsersCompare | number_format(0, ',', ' ') }}
+                                ({{ totalUsersComparePercent | number_format(0, ',', ' ') }}%) par rapport au m-1</div>
+                        </div>
+                    </div>
+                    <div class="stats shadow w-1/3">
+                        <div class="stat">
+                            <div class="stat-title">Utilisateurs actif</div>
+                            <div class="stat-value">TODO</div>
+                            <div class="stat-desc">0 (0%) par rapport au m-1</div>
+                        </div>
+                    </div>
+                    <div class="stats shadow w-1/3">
+                        <div class="stat">
+                            <div class="stat-title">Signalements</div>
+                            <div class="stat-value">{{ totalReports | number_format(0, ',', ' ') }}</div>
+                            <div class="stat-desc">{{ totalReportsCompare | number_format(0, ',', ' ') }}
+                                ({{ totalReportsComparePercent | number_format(0, ',', ' ') }}%) par rapport au m-1</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card w-full xl:w-1/2 bg-zinc-800 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">Graphiques</h2>
+                <div style="width: 100%">
+                    <canvas id="acquisitions"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Last users and reports -->
+    <div class="flex flex-row space-x-2 flex-wrap xl:flex-nowrap mt-3">
+        <div class="card w-full bg-zinc-800 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">Derniers utilisateurs</h2>
+                <div class="overflow-x-auto">
+                    <table class="table w-full">
+                        <!-- head -->
+                        <thead>
+                            <tr class="hover">
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Description</th>
+                                <th>Verified</th>
+                                <th>Created_at</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- row 1 -->
+                            {% for user in usersTable %}
+                            <tr class="hover">
+                                <th>{{ user.id }}</th>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.description | slice(0, 75) }}...</td>
+                                <td><input type="checkbox" class="checkbox checkbox-accent" {% if user.verified %}checked{% endif %} disabled></td>
+                                <td>{{ user.createdAt | date('Y-m-d') }}</td>
+                            </tr>
+                            {% endfor %}
+                            <!-- See more row -->
+                            <tr class="hover">
+                                <td colspan="6" class="text-center">
+                                    <a href="{{ path('app_admin_users') }}" class="link link-accent">Voir plus</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-row space-x-2 flex-wrap xl:flex-nowrap mt-3">
+        <div class="card w-full bg-zinc-800 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">Derniers signalements</h2>
+                <div class="overflow-x-auto">
+                    <table class="table w-full">
+                        <!-- head -->
+                        <thead>
+                            <tr class="hover">
+                                <th>ID</th>
+                                <th>User reporting</th>
+                                <th>User reported</th>
+                                <th>Reason</th>
+                                <th>Status</th>
+                                <th>Created_at</th>
+                                <th>Updated_at</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- row 1 -->
+                            {% for report in reportsTable %}
+                            <tr class="hover">
+                                <th>{{ report.id }}</th>
+                                <td>{{ report.userReporting.username }}</td>
+                                <td>{{ report.userReported.username }}</td>
+                                <td>{% if report.reason | length > 45 %}{{ report.reason | slice(0, 45) }}...{% else %}{{ report.reason }}{% endif %}</td>
+                                <td>{{ report.state == 'Pending' ? '<span class="badge badge-warning">En attente</span>' : (report.state == 'Review' ? '<span class="badge badge-info">En cours de vérification</span>' : '<span class="badge badge-success">Résolu</span>') }}
+                                </td>
+                                <td>{{ report.createdAt | date('Y-m-d H:i:s') }}</td>
+                                <td>{{ report.updatedAt | date('Y-m-d') }}</td>
+                            </tr>
+                            {% endfor %}
+                            <!-- See more row -->
+                            <tr class="hover">
+                                <td colspan="7" class="text-center">
+                                    <a href="{{ path('app_admin_reports') }}" class="link link-accent">Voir plus</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+    (async function () {
+        let data = {{ usersPerMonthAndYear | json_encode | raw }};
+        
+        const newData = [];
+        Object.keys(data.labels).forEach((key) => {
+            newData.push({
+                year: data.labels[key],
+                count: data.data[key]
+            });
+        });
+        data = newData;
+
+        new Chart(
+            document.getElementById('acquisitions'), {
+                type: 'line',
+                data: {
+                    labels: data.map(row => row.year),
+                    datasets: [{
+                        label: 'Total des utilisateurs par mois',
+                        data: data.map(row => row.count)
+                    }]
+                }
+            }
+        );
+    })();
+</script>
+
+{% endblock %}

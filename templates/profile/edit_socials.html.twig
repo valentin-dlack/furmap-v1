@@ -1,0 +1,140 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProfileController!{% endblock %}
+
+{% block body %}
+
+<div class="py-8">
+    <form method="POST" action="{{ path('app_profile_edit_socials') }}"
+        class="bg-white rounded-lg shadow dark:border md:mt-0 xl:p-0 dark:bg-white/10 backdrop-blur-2xl dark:border-gray-700 p-5 md:w-1/2 mx-auto">
+        <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+
+            {{ form_start(form) }}
+
+            <div class="flex flex-row justify-between flex-wrap">
+                <div class="w-full xl:w-96">
+                    <label for="discord"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Discord</label>
+                    {{ form_row(form.discord) }}
+                </div>
+                <div class="w-full xl:w-96">
+                    <label for="twitter"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Twitter</label>
+                    {{ form_row(form.twitter) }}
+                </div>
+            </div>
+
+            <div class="flex flex-row justify-between flex-wrap">
+                <div class="w-full xl:w-96">
+                    <label for="instagram"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Instagram</label>
+                    {{ form_row(form.instagram) }}
+                </div>
+                <div class="w-full xl:w-96">
+                    <label for="twitch"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Twitch</label>
+                    {{ form_row(form.twitch) }}
+                </div>
+            </div>
+
+            <div class="flex flex-row justify-between flex-wrap">
+                <div class="w-full xl:w-96">
+                    <label for="youtube"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Youtube</label>
+                    {{ form_row(form.youtube) }}
+                </div>
+                <div class="w-full xl:w-96">
+                    <label for="telegram"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Telegram</label>
+                    {{ form_row(form.telegram) }}
+                </div>
+            </div>
+
+            <div class="flex flex-row justify-between flex-wrap">
+                <div class="w-full xl:w-96">
+                    <label for="steam"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Steam</label>
+                    {{ form_row(form.steam) }}
+                </div>
+                <div class="w-full xl:w-96">
+                    <label for="reddit"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Reddit</label>
+                    {{ form_row(form.reddit) }}
+                </div>
+            </div>
+
+            <div class="flex flex-row justify-between flex-wrap">
+                <div class="w-full xl:w-96">
+                    <label for="tiktok"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tiktok</label>
+                    {{ form_row(form.tiktok) }}
+                </div>
+                <div class="w-full xl:w-96">
+                    <label for="github"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Github</label>
+                    {{ form_row(form.github) }}
+                </div>
+            </div>
+
+            <div class="flex flex-row justify-between flex-wrap">
+                <div class="w-full xl:w-96">
+                    <label for="gitlab"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gitlab</label>
+                    {{ form_row(form.gitlab) }}
+                </div>
+                <div class="w-full xl:w-96">
+                    <label for="furaffinity"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Furaffinity</label>
+                    {{ form_row(form.furaffinity) }}
+                </div>
+            </div>
+
+            <div class="flex flex-row justify-between flex-wrap">
+                <div class="w-full xl:w-96">
+                    <label for="deviantart"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Deviantart</label>
+                    {{ form_row(form.deviantart) }}
+                </div>
+                <div class="w-full xl:w-96">
+                    <label for="tumblr"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tumblr</label>
+                    {{ form_row(form.tumblr) }}
+                </div>
+            </div>
+
+            <div class="flex flex-row justify-between flex-wrap">
+                <div class="w-full xl:w-96">
+                    <label for="soundcloud"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Soudcloud</label>
+                    {{ form_row(form.soundcloud) }}
+                </div>
+                <div class="w-full xl:w-96">
+                    <label for="VK" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">VK</label>
+                    {{ form_row(form.vk) }}
+                </div>
+            </div>
+
+            <div class="flex flex-row justify-between flex-wrap">
+                <div class="w-full xl:w-96">
+                    <label for="facebook"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Facebook</label>
+                    {{ form_row(form.facebook) }}
+                </div>
+                <div class="w-full xl:w-96">
+                    <label for="skype"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Skype</label>
+                    {{ form_row(form.skype) }}
+                </div>
+            </div>
+
+            <div class="flex justify-center">
+                <button type="submit" class="btn btn-primary w-full ">Save</button>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </form>
+</div>
+
+
+{% endblock %}

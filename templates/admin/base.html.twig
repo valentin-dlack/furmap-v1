@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+    {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+        integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+        integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
+    {% block stylesheets %}
+    {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+        integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.0/purify.min.js"
+        integrity="sha512-Ijc86Y/rPOFCr+CJLd0QQlEaCC9ztVJFvPzK0DMrHCJ8biDkyQoo6Ll/OmqMEOaDJ2nCgsV89402SzXnocKzZg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>
+    {% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+</head>
+
+<body>
+    <div class="drawer drawer-mobile">
+        <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
+        <div class="drawer-content flex flex-col">
+            <!-- Page content here -->
+            <div class="navbar bg-base-300">
+                <div class="flex-none">
+                    <label for="my-drawer-2" class="btn btn-ghost drawer-button lg:hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            class="inline-block w-5 h-5 stroke-current">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </label>
+                </div>
+                <div class="flex-none">
+                    <a class="btn btn-ghost normal-case text-xl">Admin Panel - FURMAP</a>
+                </div>
+            </div>
+            {% block body %}{% endblock %}
+
+        </div>
+        <div class="drawer-side">
+            <label for="my-drawer-2" class="drawer-overlay"></label>
+            <ul class="menu p-4 w-80 bg-base-300 text-base-content">
+                <!-- Title -->
+                <span class="btn btn-ghost text-lg mb-2">Menu</span>
+                <hr class="mb-2">
+                <li><a href="{{ path('app_admin') }}"
+                        {% if app.request.attributes.get('_route') == 'app_admin' %}class="active"
+                        {% endif %}>Accueil</a></li>
+                <li><a href="{{ path('app_admin_users') }}"
+                        {% if app.request.attributes.get('_route') == 'app_admin_users' %}class="active"
+                        {% endif %}>Utilisateurs</a></li>
+                <li><a href="{{ path('app_admin_reports') }}"
+                        {% if app.request.attributes.get('_route') == 'app_admin_reports' %}class="active"
+                        {% endif %}>Signalements</a></li>
+                <li><a href="{{ path('app_admin_maps') }}"
+                        {% if app.request.attributes.get('_route') == 'app_admin_maps' %}class="active"
+                        {% endif %}>Cartes</a></li>
+                <li><a href="{{ path('app_admin_auto_detect') }}"
+                        {% if app.request.attributes.get('_route') == 'app_admin_auto_detect' %}class="active"
+                        {% endif %}>Auto-détection (BETA)</a></li>
+                <li><a href="{{ path('app_home') }}">Retour au site</a></li>
+            </ul>
+
+        </div>
+    </div>
+</body>
+
+</html>

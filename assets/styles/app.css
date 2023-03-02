@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.main-hero {
+    background-image: url('../images/background/hero-bg.jpg');
+}
+
+.over-hero {
+    box-shadow: inset 0px -100px 100px -50px hsl(var(--b1));
+}
+
+.container-y {
+    position: relative;
+}
+
+.overlay {     
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    bottom: -30px;
+    left: 20px;
+    z-index: 9999;
+}

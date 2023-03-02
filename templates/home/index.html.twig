@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+<div class="hero min-h-screen main-hero">
+    <div class="hero-overlay bg-opacity-60 backdrop-blur-sm over-hero"></div>
+    <div class="hero-content text-center text-neutral-content">
+        <div class="max-w-md">
+            <h1 class="mb-5 text-5xl font-bold">Welcome !</h1>
+            <p class="mb-5 text-md">Looking for furries in your area? Look no further than Furmap ! We've taken the
+                concept of Furmap.net, a beloved furry community site that is now closed, and created a
+                new platform to help you connect with furries near you !</p>
+            <a class="btn btn-primary" href="{{ url('app_map') }}">Let's see !</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

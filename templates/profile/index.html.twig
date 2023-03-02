@@ -1,0 +1,212 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProfileController!{% endblock %}
+
+{% block body %}
+<main class="container mx-auto my-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+    <!-- Left column - Profile picture and basic information -->
+    <div class="flex flex-col justify-center items-center md:col-span-1">
+        <img class="rounded-full w-40 h-40 object-cover mb-4" src="{{ asset('/uploads/avatars/' ~ user.avatar) }}" alt="avatar" />
+        <h2 class="text-2xl font-bold mb-2">{{ user.username }}</h2>
+        <h3 class="text-lg font-medium mb-2">Member since {{ user.createdAt|date('d/m/Y') }}</h3>
+        {% if app.user == user %}
+        <div class="flex space-x-2">
+            <a href="{{ url('app_profile_edit') }}" class="btn btn-primary">Edit profile</a>
+            <a href="{{ url('app_profile_edit_socials') }}" class="btn btn-primary">Edit social networks</a>
+        </div>
+
+        <div class="mt-2">
+            <!-- flashes -->
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-error px-4 py-3 rounded relative" role="alert">
+                    <strong class="font-bold"><i class="fa-solid fa-xmark"></i></strong>
+                    <span class="block sm:inline">{{ message }}</span>
+                </div>
+            {% endfor %}
+            <!-- end flashes -->
+        </div>
+
+        {% endif %}
+        {% if app.user != user and app.user %}
+        <div class="flex space-x-2">
+            <label for="reportModal" href="{{ url('app_profile_edit') }}" class="btn btn-accent">Report</label>
+        </div>
+        {% endif %}
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success px-4 py-3 rounded relative mt-2" role="alert">
+                <strong class="font-bold"><i class="fa-regular fa-circle-check"></i></strong>
+                <span class="block sm:inline">{{ message }}</span>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Middle column - Detailed profile information -->
+    <div class="md:col-span-2">
+        <h2 class="text-2xl font-bold mb-4">Map</h2>
+        <div id="map" class="h-96"></div>
+    </div>
+
+    <!-- Right column - Recent activities -->
+    <div class="md:col-span-1">
+        <h2 class="text-2xl font-bold mb-4">Social Networks</h2>
+        <!-- flex row with 2 buttons next to each other make w-full when on mobile -->
+        <div class="flex flex-row w-full flex-wrap">
+            <!-- Discord & Twitter-->
+            {% if socials.discord is not empty %}
+            <button class="btn btn-circle w-1/2"><i class="fa-brands fa-discord mr-5 text-xl"></i><span class="btn-discord">{{ socials.discord }}</span></button>
+            {% endif %}
+            {% if socials.twitter is not empty %}
+            <a href="https://twitter.com/{{ socials.twitter }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-twitter mr-5 text-xl"></i>@{{ socials.twitter }}</a>
+            {% endif %}
+            <!-- Instagram & Twitch -->
+            {% if socials.instagram is not empty %}
+            <a href="https://instagram.com/{{ socials.instagram }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-instagram mr-5 text-xl"></i>@{{ socials.instagram }}</a>
+            {% endif %}
+            {% if socials.twitch is not empty %}
+            <a href="https://twitch.tv/{{ socials.twitch }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-twitch mr-5 text-xl"></i>@{{ socials.twitch }}</a>
+            {% endif %}
+            <!-- Youtube & Telegram -->
+            {% if socials.youtube is not empty %}
+            <a href="https://youtube.com/{{ socials.youtube }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-youtube mr-5 text-xl"></i>{{ socials.youtube }}</a>
+            {% endif %}
+            {% if socials.telegram is not empty %}
+            <a href="https://t.me/{{ socials.telegram }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-telegram mr-5 text-xl"></i>@{{ socials.telegram }}</a>
+            {% endif %}
+            <!-- Steam & Reddit -->
+            {% if socials.steam is not empty %}
+            <a href="https://steamcommunity.com/id/{{ socials.steam }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-steam mr-5 text-xl"></i>{{ socials.steam }}</a>
+            {% endif %}
+            {% if socials.reddit is not empty %}
+            <a href="https://reddit.com/u/{{ socials.reddit }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-reddit mr-5 text-xl"></i>{{ socials.reddit }}</a>
+            {% endif %}
+            <!-- Tiktok & Facebook -->
+            {% if socials.tiktok is not empty %}
+            <a href="https://tiktok.com/@{{ socials.tiktok }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-tiktok mr-5 text-xl"></i>{{ socials.tiktok }}</a>
+            {% endif %}
+            {% if socials.facebook is not empty %}
+            <a href="https://facebook.com/{{ socials.facebook }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-facebook mr-5 text-xl"></i>{{ socials.facebook }}</a>
+            {% endif %}
+            <!-- github & gitlab -->
+            {% if socials.github is not empty %}
+            <a href="https://github.com/{{ socials.github }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-github mr-5 text-xl"></i>{{ socials.github }}</a>
+            {% endif %}
+            {% if socials.gitlab is not empty %}
+            <a href="https://gitlab.com/{{ socials.gitlab }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-gitlab mr-5 text-xl"></i>{{ socials.gitlab }}</a>
+            {% endif %}
+            <!-- Tumblr & Soundcloud -->
+            {% if socials.tumblr is not empty %}
+            <a href="https://{{ socials.tumblr }}.tumblr.com" class="btn btn-circle w-1/2"><i class="fa-brands fa-tumblr mr-5 text-xl"></i>{{ socials.tumblr }}</a>
+            {% endif %}
+            {% if socials.soundcloud is not empty %}
+            <a href="https://soundcloud.com/{{ socials.soundcloud }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-soundcloud mr-5 text-xl"></i>{{ socials.soundcloud }}</a>
+            {% endif %}
+            <!-- Deviantart & Furaffinity -->
+            {% if socials.deviantart is not empty %}
+            <a href="https://{{ socials.deviantart }}.deviantart.com" class="btn btn-circle w-1/2"><i class="fa-brands fa-deviantart mr-5 text-xl"></i>{{ socials.deviantart }}</a>
+            {% endif %}
+            {% if socials.furaffinity is not empty %}
+            <a href="https://furaffinity.net/user/{{ socials.furaffinity }}" class="btn btn-circle w-1/2"><i class="fa-solid fa-paw mr-5 text-xl"></i>{{ socials.furaffinity }}</a>
+            {% endif %}
+            <!-- VK & Skype -->
+            {% if socials.vk is not empty %}
+            <a href="https://vk.com/{{ socials.vk }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-vk mr-5 text-xl"></i>{{ socials.vk }}</a>
+            {% endif %}
+            {% if socials.skype is not empty %}
+            <a href="skype:{{ socials.skype }}?chat" class="btn btn-circle w-1/2"><i class="fa-brands fa-skype mr-5 text-xl"></i>{{ socials.skype }}</a>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <div class="md:col-span-2">
+        <h2 class="text-2xl font-bold mb-4">Description</h2>
+        <!-- Marked markdown parser -->
+        <div id="description" class="mb-4 prose">
+        </div>
+    </div>
+    
+</main>
+
+<!-- Put this part before </body> tag -->
+<input type="checkbox" id="reportModal" class="modal-toggle" />
+<div class="modal" style="z-index: 9999;">
+    <div class="modal-box w-11/12 max-w-5xl">
+        <h3 class="font-bold text-lg">Report for {{ user.username }} :</h3>
+        <form action="/report" method="POST">
+            <input type="hidden" name="id" value="{{ user.id }}">
+            <div class="mt-4">
+                <!-- Reason Select -->
+                <label for="reason" class="block text-md text-gray-200 font-semibold mb-2">Reason</label>
+                <select id="reason" name="reason" class="select select-bordered w-full" required>
+                    <option value="" disabled selected>Select a reason</option>
+                    <option value="Spam">Spam</option>
+                    <option value="Inappropriate">Inappropriate Profile (Image, username, description)</option>
+                    <option value="NSFW_Socials">NSFW Social networks</option>
+                    <option value="Fake">Fake Profile/Impersonation</option>
+                    <option value="Other">Other (Please specify)</option>
+                </select>
+                <div id="otherInput" class="mt-4 hidden">
+                    <label for="other_reason" class="block text-md text-gray-200 font-semibold mb-2">Other</label>
+                    <input type="text" name="other_reason" id="other_reason"
+                        class="input input-bordered w-full" placeholder="Please specify">
+                </div>
+                <label for="message" class="block text-md text-gray-200 font-semibold mt-4 mb-2">Message</label>
+                <textarea name="message" id="message" rows="3"
+                    class="textarea textarea-bordered w-full" placeholder="Provide more informations if you need (links to screenshots etc)"></textarea>
+            </div>
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">Report</button>
+                <label for="reportModal" class="btn btn-outline">Cancel</label>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('description').innerHTML = DOMPurify.sanitize(marked.parse(`{{ user.description|raw }}`));
+
+    const usrLat = "{{ user.latitude }}"
+    const usrLng = "{{ user.longitude }}"
+    // Leaflet map
+    if (usrLat != "" && usrLng != "") {
+        var map = L.map('map').setView([{{ user.latitude }}, {{ user.longitude }}], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        L.marker([{{ user.latitude }}, {{ user.longitude }}]).addTo(map);
+    } else {
+        var map = L.map('map').setView([48.8566, 2.3522], 2);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+    }
+
+    // discord button copy to clipboard on click
+    var discordButton = document.querySelector('.btn-discord');
+    discordButton?.addEventListener('click', function(event) {
+        let oldVal = discordButton.textContent;
+        navigator.clipboard.writeText(discordButton.textContent);
+        discordButton.textContent = 'Copied!';
+        setTimeout(function() {
+            discordButton.textContent = oldVal;
+        }, 2000);
+    });
+
+    // Other input
+    var reasonSelect = document.getElementById('reason');
+    var otherInput = document.getElementById('otherInput');
+    reasonSelect.addEventListener('change', function(event) {
+        if (reasonSelect.value == 'Other') {
+            otherInput.classList.remove('hidden');
+            document.getElementById('other_reason').setAttribute('required', '');
+        } else {
+            otherInput.classList.add('hidden');
+            document.getElementById('other_reason').removeAttribute('required');
+        }
+    });
+
+</script>
+{% endblock %}

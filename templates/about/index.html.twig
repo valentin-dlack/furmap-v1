@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}About Furmap{% endblock %}
+
+{% block body %}
+<div class="container mx-auto py-8">
+
+    <h1 class="text-3xl font-bold mb-4">About Furmap</h1>
+
+    <div class="mb-8">
+        <h2 class="text-2xl font-bold mb-2">What is Furmap?</h2>
+        <p class="mb-4">Furmap is a global community map around the furry fandom. I'm, for now, the only developer of
+            this project, I want to help the furry community to connect with each other. Furmap is a project that I
+            started in 2023, and I'm still working on it and always looking for new ideas to improve it.</p>
+        <p class="mb-4">It's also a place to get information about the furry fandom, and to find furry events near you.
+            And I'm working on community driven features, like reviews of big events or a support for associations.</p>
+    </div>
+
+    <div class="mb-8">
+        <h2 class="text-2xl font-bold mb-2">Who is behind Furmap?</h2>
+        <p class="mb-4">I'm Lack, a french furry of 20 years old. I'm a web developer student, and I'm working on this
+            project in my free time to help the furry community. You can see my other projects on my <a
+                href="https://github.com/valentin-dlack" target="_blank" rel="noopener noreferrer"
+                class="link link-accent">GitHub</a>
+                and you can also follow me on <a href="https://twitter.com/LackFur" target="_blank" rel="noopener noreferrer" class="link link-accent">Twitter</a>
+        </p>
+    </div>
+
+    <!-- Technos -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-bold mb-2">What technologies are used?</h2>
+        <p class="mb-4">Furmap is a web application, and it's built with the Symfony framework. The front-end is
+            built with TailwindCSS and DaisyUI, and the map is made with LeafletJS.</p>
+    </div>
+
+    <!-- Data -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-bold mb-2">Is my data sold?</h2>
+        <p class="mb-4">No, your data is not sold. Furmap is a non-profit project, and I don't want to make money with
+            it. And I don't want to sell your data to third parties, I know how privacy is important for everyone and I
+            am myself very concerned about it.</p>
+    </div>
+
+    <!-- Contact -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-bold mb-2">How can I contact you?</h2>
+        <p class="mb-4">You can contact me through the <a href="{{ url('app_contact') }}" class="link link-accent">contact form</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

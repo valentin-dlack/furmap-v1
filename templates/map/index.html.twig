@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello MapController!{% endblock %}
+
+{% block body %}
+<div class="container-y">
+    <!-- map h-screen but withouth navbar -->
+    <div id="map" class="h-screen"></div>
+    <div class="overlay">
+        <div class="card w-96 bg-base-100 shadow-xl">
+            <div class="card-body">
+                <p>There are currently <span class="font-bold">{{ users|length }}</span> furries on Furmap !</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //set view to france
+    const map = L.map('map').setView([46.227638, 2.213749], 6);
+
+    const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    //add an invisible marker to the map
+    const marker = L.marker([0, 0], {
+        opacity: 0
+    }).addTo(map);
+
+    //get users from database
+    let user;
+    {% for user in users %}
+    user_{{ user.id }} = { lat: '{{ user.latitude }}', lng: '{{ user.longitude }}' };
+    L.marker([user_{{ user.id }}.lat, user_{{ user.id }}.lng]).addTo(map)
+        .bindPopup('<a href="/profile/{{ user.id }}">{{ user.username }}</a>');  
+    {% endfor %}
+</script>
+{% endblock %}

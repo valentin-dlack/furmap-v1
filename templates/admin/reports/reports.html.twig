@@ -1,0 +1,53 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}ADMIN - Signalements{% endblock %}
+
+
+{% block body %}
+
+<div class="container p-5">
+    <div class="flex flex-row space-x-2 flex-wrap xl:flex-nowrap mt-3">
+        <div class="card w-full bg-zinc-800 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">Utilisateurs</h2>
+                <div class="overflow-x-auto">
+                    <table class="table w-full">
+                        <!-- head -->
+                        <thead>
+                            <tr class="hover">
+                                <th>ID</th>
+                                <th>User reporting</th>
+                                <th>User reported</th>
+                                <th>Reason</th>
+                                <th>Status</th>
+                                <th>Created_at</th>
+                                <th>Updated_at</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- row 1 -->
+                            {% for report in reports %}
+                            <tr class="hover">
+                                <th>{{ report.id }}</th>
+                                <td>{{ report.userReporting.username }}</td>
+                                <td>{{ report.userReported.username }}</td>
+                                <td>{% if report.reason | length > 45 %}{{ report.reason | slice(0, 45) }}...{% else %}{{ report.reason }}{% endif %}</td>
+                                <td>{{ report.state == 'Pending' ? '<span class="badge badge-warning">En attente</span>' : (report.state == 'Review' ? '<span class="badge badge-info">En cours de vérification</span>' : '<span class="badge badge-success">Résolu</span>') }}
+                                </td>
+                                <td>{{ report.createdAt | date('Y-m-d H:i:s') }}</td>
+                                <td>{{ report.updatedAt | date('Y-m-d H:i:s') }}</td>
+                                <td>
+                                    <a href="{{ path('app_admin_report', {'id': report.id}) }}" class="btn btn-sm btn-primary"><i class="fa-solid fa-up-right-from-square"></i></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

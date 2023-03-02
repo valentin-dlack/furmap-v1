@@ -1,0 +1,50 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}ADMIN - Utilisateurs{% endblock %}
+
+
+{% block body %}
+
+<div class="container p-5">
+    <div class="flex flex-row space-x-2 flex-wrap xl:flex-nowrap mt-3">
+        <div class="card w-full bg-zinc-800 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">Utilisateurs</h2>
+                <div class="overflow-x-auto">
+                    <table class="table w-full">
+                        <!-- head -->
+                        <thead>
+                            <tr class="hover">
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Description</th>
+                                <th>Verified</th>
+                                <th>Created_at</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- row 1 -->
+                            {% for user in usersTable %}
+                            <tr class="hover">
+                                <th>{{ user.id }}</th>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.description | slice(0, 75) }}...</td>
+                                <td><input type="checkbox" class="checkbox checkbox-accent" {% if user.verified %}checked{% endif %} disabled></td>
+                                <td>{{ user.createdAt | date('Y-m-d') }}</td>
+                                <td>
+                                    <a href="{{ path('app_admin_user', {'id': user.id}) }}" class="btn btn-sm btn-primary"><i class="fa-solid fa-up-right-from-square"></i></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact page{% endblock %}
+
+{% block body %}
+<section class="px-4 py-8 md:p-12">
+    <h1 class="text-2xl font-bold mb-4">Contact Us</h1>
+    <p class="text-gray-600 mb-8">Please fill out the form below to get in touch with us.</p>
+    {% if app.session.flashBag.has('success') %}
+      <div class="alert alert-success px-4 py-3 rounded relative mb-4" role="alert">
+        <strong class="font-bold">Success!</strong>
+        <span class="block sm:inline">{{ app.session.flashBag.get('success')[0] }}</span>
+      </div>
+    {% endif %}
+    {% if app.session.flashBag.has('error') %}
+      <div class="alert alert-error px-4 py-3 rounded relative mb-4" role="alert">
+        <strong class="font-bold">Error!</strong>
+        <span class="block sm:inline">{{ app.session.flashBag.get('error')[0] }}</span>
+      </div>
+    {% endif %}
+    <form action="#" method="POST">
+      <div class="mb-4">
+        <label class="block font-semibold mb-2" for="name">Name</label>
+        <input class="w-full input rounded-md border-gray-300 p-2" type="text" id="name" name="name" required>
+      </div>
+      <div class="mb-4">
+        <label class="block font-semibold mb-2" for="email">Email</label>
+        <input class="w-full input rounded-md border-gray-300 p-2" type="email" id="email" name="email" required>
+      </div>
+      <div class="mb-4">
+        <label class="block font-semibold mb-2" for="subject">Subject</label>
+        <input class="w-full input rounded-md border-gray-300 p-2" type="text" id="subject" name="subject" required>
+      </div>
+      <div class="mb-4">
+        <label class="block font-semibold mb-2" for="message">Message</label>
+        <textarea class="w-full textarea rounded-md border-gray-300 p-2" id="message" name="message" rows="5" required></textarea>
+      </div>
+      <div class="mb-4">
+        <label class="block font-semibold mb-2" for="captcha">Please solve the following captcha:</label>
+        <div class="flex items-center">
+          <input class="w-12 input rounded-md border-gray-300 p-2" type="text" id="captcha" name="captcha" required>
+          <span class="ml-4 font-semibold text-gray-600 select-none" id="captcha-operation"></span>
+        </div>
+      </div>
+      <button class="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2" type="submit">Submit</button>
+    </form>
+  </section>
+
+  <script>
+    const captchaOperation = document.getElementById('captcha-operation');
+    const captchaInput = document.getElementById('captcha');
+
+    const generateCaptcha = () => {
+      const firstNumber = Math.ceil(Math.random() * 10);
+      const secondNumber = Math.ceil(Math.random() * 10);
+      const operation = Math.round(Math.random()) ? '+' : '-';
+      const result = operation === '+' ? firstNumber + secondNumber : firstNumber - secondNumber;
+
+      captchaOperation.textContent = `${firstNumber} ${operation} ${secondNumber}`;
+    };
+
+    generateCaptcha();
+
+    captchaOperation.addEventListener('click', generateCaptcha);
+
+    const form = document.querySelector('form');
+
+    form.addEventListener('submit', (event) => {
+      if (parseInt(captchaInput.value) !== eval(captchaOperation.textContent)) {
+        event.preventDefault();
+        alert('The result of the captcha is incorrect.');
+        generateCaptcha();
+      }
+    });
+  </script>
+{% endblock %}

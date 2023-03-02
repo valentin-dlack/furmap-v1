@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User Not Found{% endblock %}
+
+{% block body %}
+<main class="container mx-auto my-8 grid grid-cols-1 md:grid-cols-3 gap-8 h-screen">
+    <div class="col-span-1 md:col-span-2">
+        <div class="bg-white rounded-lg shadow dark:border md:mt-0 xl:p-0 dark:bg-white/10 backdrop-blur-2xl dark:border-gray-700 p-5 md:w-1/2 mx-auto">
+            <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">User Not Found</h1>
+                <p class="text-gray-700 dark:text-gray-300">The user you are looking for does not exist.</p>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}ADMIN - Signalement{% endblock %}
+
+{% block body %}
+
+<div class="container p-5">
+    <div class="flex flex-row space-x-2 flex-wrap xl:flex-nowrap mt-3">
+        <div class="card w-full bg-zinc-800 shadow-xl">
+            <div class="card-body">
+                <div class="flex space-x-5">
+                    <h2 class="card-title">Signalement N°{{report.id}} :</h2>
+                    <div class="flex flex-row justify-end space-x-2">
+                        <label for="deleteModal" class="btn btn-sm btn-error" data-id=""><i class="fa-solid fa-trash"></i></label>
+                    </div>
+                </div>
+                <div class="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4 mt-5">
+                    <div class="flex-auto">
+                        <div class="flex flex-wrap text-medium text-gray-400">
+                            <div class="w-full lg:w-1/3">
+                                <span class="font-medium text-gray-100">Utilisateur à l'origine du signalement</span>
+                                <p>{{report.userReporting.username}} ({{report.userReporting.email}})</p>
+                            </div>
+                            <div class="w-full lg:w-1/3">
+                                <span class="font-medium text-gray-100">Utilisateur signalé</span>
+                                <p>{{report.userReported.username}} ({{report.userReported.email}})</p>
+                            </div>
+                            <div class="w-full lg:w-1/3">
+                                <span class="font-medium text-gray-100">Raison du signalement</span>
+                                <p>{{report.reason}}</p>
+                            </div>
+                            <div class="w-full lg:w-1/3">
+                                <span class="font-medium text-gray-100">Message</span>
+                                <p>{{report.message}}</p>
+                            </div>
+                            <div class="w-full lg:w-1/3">
+                                <span class="font-medium text-gray-100">Statut du signalement</span>
+                                <p>{{ report.state == 'Pending' ? '<span class="badge badge-warning">En attente</span>' : (report.state == 'Review' ? '<span class="badge badge-info">En cours de vérification</span>' : '<span class="badge badge-success">Résolu</span>') }}</p>
+                            </div>
+                            <div class="w-full lg:w-1/3">
+                                <span class="font-medium text-gray-100">Date</span>
+                                <p>Créé le {{report.createdAt|date('d/m/Y à H:i')}}</p>
+                                <p>Modifié le {{report.updatedAt|date('d/m/Y à H:i')}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flex flex-row space-x-2 flex-wrap xl:flex-nowrap mt-3">
+        <div class="card w-1/3 bg-zinc-800 shadow-xl">
+            <div class="card-body">
+                {% for message in app.flashes('success') %}
+                    <div class="alert alert-success px-4 py-3 rounded relative mt-2" role="alert">
+                        <strong class="font-bold"><i class="fa-regular fa-circle-check"></i></strong>
+                        <span class="block sm:inline">{{ message }}</span>
+                    </div>
+                {% endfor %}
+                <h2 class="card-title">Modification de l'état :</h2>
+                <form action="{{ path('admin_report_update', {'id': report.id}) }}" method="POST">
+                    <div class="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4 mt-5">
+                        <div class="flex-auto">
+                            <div class="flex flex-wrap text-medium text-gray-400">
+                                <div class="w-full lg:w-1/3">
+                                    <label for="state" class="form-label">Status :</label>
+                                    <select name="state" id="state" class="select select-bordered">
+                                        <option value="Pending" {{ report.state == 'Pending' ? 'selected' : '' }}>En attente</option>
+                                        <option value="Review" {{ report.state == 'Review' ? 'selected' : '' }}>En cours de vérification</option>
+                                        <option value="Resolved" {{ report.state == 'Resolved' ? 'selected' : '' }}>Résolu</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- csrf -->
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('admin_report_update' ~ report.id) }}">
+                    <div class="flex flex-row justify-center space-x-2 mt-5">
+                        <button type="submit" class="btn btn-primary w-full">Modifier</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card w-full bg-zinc-800 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">Utilisateurs concernés :</h2>
+                <table class="table w-full">
+                    <!-- head -->
+                    <thead>
+                        <tr class="hover">
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <td>Role</td>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover">
+                            <th>{{ report.userReporting.id }}</th>
+                            <td>{{ report.userReporting.username }}</td>
+                            <td>{{ report.userReporting.email }}</td>
+                            <td><span class="text-green-600">Utilisateur qui a signalé</span></td>
+                            <td>
+                                <a href="{{ path('app_admin_user', {'id': report.userReporting.id}) }}" target="_blank" class="btn btn-sm btn-primary">Voir le profil</a>
+                            </td>
+                        </tr>
+                        <tr class="hover">
+                            <th>{{ report.userReported.id }}</th>
+                            <td>{{ report.userReported.username }}</td>
+                            <td>{{ report.userReported.email }}</td>
+                            <td><span class="text-red-600">Utilisateur signalé</span></td>
+                            <td>
+                                <a href="{{ path('app_admin_user', {'id': report.userReported.id}) }}" target="_blank" class="btn btn-sm btn-primary">Voir le profil</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
