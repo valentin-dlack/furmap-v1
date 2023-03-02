@@ -59,7 +59,7 @@ class ProfileController extends AbstractController
                         $newFilename
                     );
                 } catch (FileException $e) {
-                    $this->addFlash('error', 'Error uploading avatar');
+                    $this->addFlash('error', $e->getMessage());
                 }
 
                 $user->setAvatar($newFilename);
