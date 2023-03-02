@@ -45,7 +45,13 @@ class ProfileController extends AbstractController
             if ($avatar) {
                 $originalFilename = pathinfo($avatar->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $avatar->guessExtension();
+                $fileExtension = $avatar->guessExtension();
+                if (($fileExtension !== 'jpg') && ($fileExtension !== 'jpeg') && ($fileExtension !== 'png')) {
+                    $this->addFlash('error', 'Avatar must be a jpg, jpeg or png file');
+                    return $this->redirectToRoute('app_profile_edit');
+                }
+
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $fileExtension;
 
                 try {
                     $avatar->move(
