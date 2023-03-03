@@ -68,11 +68,6 @@ class ProfileController extends AbstractController
                 $user->setLongitude($form->get('longitude')->getData());
             }
 
-            // get description and replace all backticks by a \`
-            $description = $form->get('description')->getData();
-            $description = str_replace('`', '\`', $description);
-            $user->setDescription($description);
-
             $em->persist($user);
             $em->flush();
             $this->addFlash('success', 'Profile updated successfully');
