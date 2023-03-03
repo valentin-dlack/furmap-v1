@@ -25,6 +25,8 @@ class ProfileController extends AbstractController
 
         $user = $this->getUser();
         $cleanDescription = str_replace('`', "\`", $user->getDescription());
+        //remove octal escape sequences
+        $cleanDescription = preg_replace('/\\\\([0-7]{1,3})/', '', $cleanDescription);
 
         return $this->render('profile/index.html.twig', [
             'controller_name' => 'ProfileController',
