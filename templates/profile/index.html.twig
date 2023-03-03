@@ -210,7 +210,6 @@
 
 <script id="markdown">
         // remove octal escape sequences
-        const cleanDescription = "{{ user.description|replace({'\\': ''})|escape('js')|raw }}";
-        document.getElementById('description').innerHTML = DOMPurify.sanitize(marked.parse(cleanDescription));
+        document.getElementById('description').innerHTML = DOMPurify.sanitize(marked.parse(`{{ cleanDescription|raw }}`));
 </script>
 {% endblock %}
