@@ -131,8 +131,6 @@
 </div>
 
 <script>
-    document.getElementById('desc').innerHTML = DOMPurify.sanitize(marked.parse(`{{ user.description|raw }}`));
-
     const userLatitude = "{{ user.latitude }}";
     const userLongitude = "{{ user.longitude }}";
 
@@ -151,5 +149,9 @@
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
     }
+</script>
+
+<script id="md">
+    document.getElementById('desc').innerHTML = DOMPurify.sanitize(marked.parse(`{{ cleanDescription|raw }}`));
 </script>
 {% endblock %}

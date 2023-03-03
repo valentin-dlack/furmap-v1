@@ -209,7 +209,6 @@
 </script>
 
 <script id="markdown">
-        // remove octal escape sequences
         document.getElementById('description').innerHTML = DOMPurify.sanitize(marked.parse(`{{ cleanDescription|raw }}`));
 </script>
 {% endblock %}
