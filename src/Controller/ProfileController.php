@@ -22,7 +22,7 @@ class ProfileController extends AbstractController
         if (!$this->getUser()) {
             return $this->redirectToRoute('app_login');
         }
-        
+
         $user = $this->getUser();
         $cleanDescription = str_replace('`', "\`", $user->getDescription());
 
@@ -130,10 +130,13 @@ class ProfileController extends AbstractController
             }
         }
 
+        $cleanDescription = str_replace('`', "\`", $user->getDescription());
+
         return $this->render('profile/index.html.twig', [
             'controller_name' => 'ProfileController',
             'user' => $user,
             'socials' => $user->getSocialNetworks(),
+            'cleanDescription' => $cleanDescription,
         ]);
     }
 
