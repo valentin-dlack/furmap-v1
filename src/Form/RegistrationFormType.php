@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType as TypeTextType;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class RegistrationFormType extends AbstractType
 {
@@ -28,7 +29,7 @@ class RegistrationFormType extends AbstractType
                     'min' => 6,
                     'minMessage' => 'Your email should be at least {{ limit }} characters',
                     // max length allowed by Symfony for security reasons
-                    'max' => 200,
+                    'max' => 180,
                 ]),
             ],
             'attr' => [
@@ -55,10 +56,14 @@ class RegistrationFormType extends AbstractType
                     'message' => 'Please enter a username',
                 ]),
                 new Length([
-                    'min' => 6,
+                    'min' => 4,
                     'minMessage' => 'Your username should be at least {{ limit }} characters',
                     // max length allowed by Symfony for security reasons
                     'max' => 25,
+                ]),
+                new Regex([
+                    'pattern' => '/^(?=[a-zA-Z0-9._]{3,25}$)(?!.*[_.]{2})[^_.].*[^.]$/',
+                    'message' => 'Username can only contain letters, numbers, underscores and dots and cannot start or end with a dot',
                 ]),
             ],
             'attr' => [

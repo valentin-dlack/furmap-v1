@@ -39,6 +39,7 @@ class ProfileEditType extends AbstractType
                     'placeholder' => 'Description',
                     'class' => 'w-full mx-auto input input-bordered focus:input-primary',
                     'style' => 'height: 275px;',
+                    'maxlength' => 750,
                 ],
                 'label' => false,
             ])

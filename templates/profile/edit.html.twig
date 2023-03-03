@@ -38,7 +38,7 @@
         {{ form_row(form.username) }}
         </div>
         <div>
-            <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description <span class="font-bold">(Supports Markdown !)</span></label>
+            <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description <span class="font-bold">(Supports Markdown !)</span> <span id="descriptionCount" class="text-sm"></span></label>
         {{ form_row(form.description) }}
         </div>
         <div>
@@ -127,6 +127,26 @@
         marker.setLatLng(e.latlng);
         marker.setOpacity(1);
     });
+
+    //count the number of characters in the description field of 750 max
+    const description = document.getElementById('profile_edit_description');
+    const descriptionCount = document.getElementById('descriptionCount');
+    description.addEventListener('input', function() {
+        descriptionCount.innerHTML = description.value.length + '/750';
+        if (description.value.length > 750) {
+            descriptionCount.classList.add('text-red-500');
+        } else {
+            descriptionCount.classList.remove('text-red-500');
+        }
+    });
+
+    // load the description count on page load
+    descriptionCount.innerHTML = description.value.length + '/750';
+    if (description.value.length > 750) {
+        descriptionCount.classList.add('text-red-500');
+    } else {
+        descriptionCount.classList.remove('text-red-500');
+    }
 
 </script>
 
