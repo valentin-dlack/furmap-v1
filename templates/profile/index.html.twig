@@ -209,6 +209,6 @@
 </script>
 
 <script id="markdown">
-        document.getElementById('description').innerHTML = DOMPurify.sanitize(marked.parse(`{{ user.description|raw }}`.replace(/`/g, "")));
+        document.getElementById('description').innerHTML = DOMPurify.sanitize(marked.parse(`{{ cleanDescription|raw }}`));
 </script>
 {% endblock %}

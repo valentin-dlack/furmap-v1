@@ -22,11 +22,15 @@ class ProfileController extends AbstractController
         if (!$this->getUser()) {
             return $this->redirectToRoute('app_login');
         }
+        
+        $user = $this->getUser();
+        $cleanDescription = str_replace('`', "\`", $user->getDescription());
 
         return $this->render('profile/index.html.twig', [
             'controller_name' => 'ProfileController',
             'user' => $this->getUser(),
             'socials' => $this->getUser()->getSocialNetworks(),
+            'cleanDescription' => $cleanDescription,
         ]);
     }
 
