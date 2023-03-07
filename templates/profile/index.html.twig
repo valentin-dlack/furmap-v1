@@ -163,8 +163,6 @@
 </div>
 
 <script>
-    document.getElementById('description').innerHTML = DOMPurify.sanitize(marked.parse(`{{ user.description|raw }}`));
-
     const usrLat = "{{ user.latitude }}"
     const usrLng = "{{ user.longitude }}"
     // Leaflet map
@@ -208,5 +206,9 @@
         }
     });
 
+</script>
+
+<script id="markdown">
+        document.getElementById('description').innerHTML = DOMPurify.sanitize(marked.parse(`{{ cleanDescription|raw }}`));
 </script>
 {% endblock %}

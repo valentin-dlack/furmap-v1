@@ -31,7 +31,7 @@
                                 <th>{{ user.id }}</th>
                                 <td>{{ user.username }}</td>
                                 <td>{{ user.email }}</td>
-                                <td>{{ user.description | slice(0, 75) }}...</td>
+                                <td>{{ user.description | slice(0, 70) }}...</td>
                                 <td><input type="checkbox" class="checkbox checkbox-accent" {% if user.verified %}checked{% endif %} disabled></td>
                                 <td>{{ user.createdAt | date('Y-m-d') }}</td>
                                 <td>

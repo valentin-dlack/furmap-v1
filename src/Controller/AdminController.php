@@ -176,10 +176,14 @@ class AdminController extends AbstractController
             $socialsFormatted .= $key . ':' . $value . '\n ';
         }
 
+        $cleanDescription = str_replace('`', "\`", $user->getDescription());
+        $cleanDescription = preg_replace('/\\\\([0-7]{1,3})/', '', $cleanDescription);
+
         return $this->render('admin/users/show_user.html.twig', [
             'user' => $user,
             'reportsTable' => $reportsTable,
             'socials' => $socialsFormatted,
+            'cleanDescription' => $cleanDescription,
         ]);
     }
 

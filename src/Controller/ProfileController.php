@@ -25,10 +25,15 @@ class ProfileController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
+        $user = $this->getUser();
+        $cleanDescription = str_replace('`', "\`", $user->getDescription());
+        $cleanDescription = preg_replace('/\\\\([0-7]{1,3})/', '', $cleanDescription);
+
         return $this->render('profile/index.html.twig', [
             'controller_name' => 'ProfileController',
             'user' => $this->getUser(),
             'socials' => $this->getUser()->getSocialNetworks(),
+            'cleanDescription' => $cleanDescription,
         ]);
     }
 
@@ -69,6 +74,7 @@ class ProfileController extends AbstractController
                 $user->setLatitude($form->get('latitude')->getData());
                 $user->setLongitude($form->get('longitude')->getData());
             }
+
             $em->persist($user);
             $em->flush();
             $this->addFlash('success', 'Profile updated successfully');
@@ -165,10 +171,15 @@ class ProfileController extends AbstractController
             }
         }
 
+        $cleanDescription = str_replace('`', "\`", $user->getDescription());
+        //remove octal escape sequences
+        $cleanDescription = preg_replace('/\\\\([0-7]{1,3})/', '', $cleanDescription);
+
         return $this->render('profile/index.html.twig', [
             'controller_name' => 'ProfileController',
             'user' => $user,
             'socials' => $user->getSocialNetworks(),
+            'cleanDescription' => $cleanDescription,
         ]);
     }
 
