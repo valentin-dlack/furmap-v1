@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Report;
 use App\Entity\User;
+use App\Form\PasswordEditType;
 use App\Form\ProfileEditType;
 use App\Form\SocialNetworksType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -11,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ProfileController extends AbstractController
@@ -74,6 +76,44 @@ class ProfileController extends AbstractController
         }
 
         return $this->render('profile/edit.html.twig', [
+            'form' => $form->createView(),
+            'user' => $user,
+        ]);
+    }
+
+    #[Route('/profile/edit/change-password', name: 'app_profile_change_password')]
+    public function editChangePassword(EntityManagerInterface $em, Request $request, UserPasswordHasherInterface $userPasswordHasher): Response
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+        $form = $this->createForm(PasswordEditType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+            $oldPassword = $form->get('oldPassword')->getData();
+            if ($userPasswordHasher->isPasswordValid($user, $oldPassword)) {
+                $user->setPassword(
+                    $userPasswordHasher->hashPassword(
+                        $user,
+                        $form->get('plainPassword')->getData()
+                    )
+                );
+                $user->setUpdatedAt(new \DateTimeImmutable());
+                $em->persist($user);
+                $em->flush();
+                $this->addFlash('success', 'Password updated successfully');
+                return $this->redirectToRoute('app_profile');
+            } else {
+                $this->addFlash('error', 'Old password is not correct');
+            }
+
+            return $this->redirectToRoute('app_profile');
+        }
+
+        return $this->render('profile/edit_password.html.twig', [
             'form' => $form->createView(),
             'user' => $user,
         ]);

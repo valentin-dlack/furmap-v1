@@ -1,0 +1,1 @@
+const f=document.querySelector("form"),b=document.querySelector("button");f.addEventListener("submit",()=>{b.classList.add("disabled"),b.querySelector("img").classList.remove("hidden")});

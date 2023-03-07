@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reset your password{% endblock %}
+
+{% block body %}
+    {{ form_start(resetForm) }}
+    <section class="bg-gray-50 dark:bg-gray-900 bg-login">
+        <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+            <div
+                class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-white/10 backdrop-blur-2xl dark:border-gray-700">
+                <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                    <h1
+                        class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                        Reset your password
+                    </h1>
+                        <div>
+                            {{ form_row(resetForm.plainPassword) }}
+                        </div>
+                        <button class="w-full btn btn-lg btn-primary"><img src="{{ asset('build/images/tail-spin.svg') }}" alt="loading" class="w-7 h-7 mr-2 hidden">Reset Password</button>
+                </div>
+            </div>
+        </div>
+    </section>
+{{ form_end(resetForm) }}
+
+<script src="{{ asset('build/js/loading.js') }}"></script>
+
+{% endblock %}

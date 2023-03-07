@@ -38,6 +38,10 @@
         {{ form_row(form.username) }}
         </div>
         <div>
+            <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+            <a href="{{ path('app_profile_change_password') }}" class="btn btn-accent">Change Password</a>
+        </div>
+        <div>
             <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description <span class="font-bold">(Supports Markdown !)</span> <span id="descriptionCount" class="text-sm"></span></label>
         {{ form_row(form.description) }}
         </div>

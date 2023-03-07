@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reset your password{% endblock %}
+
+{% block body %}
+    <section class="bg-gray-50 dark:bg-gray-900 bg-login">
+        {{ form_start(requestForm) }}
+        <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+            <div
+                class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-white/10 backdrop-blur-2xl dark:border-gray-700">
+                <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                    <h1
+                        class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                        Reset your password
+                    </h1>
+                    <!-- flash messages -->
+                    {% for message in app.flashes('success') %}
+                    <div class="alert alert-success px-4 py-3 rounded relative" role="alert">
+                        <strong class="font-bold">Success !</strong>
+                        <span class="block sm:inline">{{ message }}</span>
+                    </div>
+                    {% endfor %}
+                    {% for message in app.flashes('reset_password_error') %}
+                    <div class="alert alert-error px-4 py-3 rounded relative" role="alert">
+                        <strong class="font-bold"><i class="fa-solid fa-exclamation-circle"></i></strong>
+                        <span class="block sm:inline">{{ message }}</span>
+                    </div>
+                    {% endfor %}
+                    <!-- end flashes -->
+                    <div>
+                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Enter your email address and we will send you a link to reset your password.
+                        </label>
+                        {{ form_row(requestForm.email) }}
+                    </div>
+                    {{ form_row(requestForm.captcha) }}
+                    <button type="submit" class="w-full btn btn-lg btn-primary"><img src="{{ asset('build/images/tail-spin.svg') }}" alt="loading" class="w-7 h-7 mr-2 hidden">Reset password</button>
+                    <a href="{{ path('app_login') }}"
+                        class="block text-sm text-center text-gray-600 dark:text-gray-400 hover:underline">
+                        Back to login
+                    </a>
+                </div>
+            </div>
+        </div>
+        {{ form_end(requestForm) }}
+    </section>
+
+    <script src="{{ asset('build/js/loading.js') }}"></script>
+{% endblock %}

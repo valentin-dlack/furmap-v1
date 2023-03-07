@@ -68,6 +68,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user_reporting', targetEntity: Report::class)]
     private Collection $reports;
 
+    #[ORM\Column(type: Types::GUID, unique: true)]
+    private ?string $uuid = null;
+
+    #[ORM\Column(length: 50, unique: true)]
+    private ?string $slug = null;
+
     public function __construct()
     {
         $this->reports = new ArrayCollection();
@@ -311,6 +317,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $report->setUserReporting(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUuid(): ?string
+    {
+        return $this->uuid;
+    }
+
+    public function setUuid(string $uuid): self
+    {
+        $this->uuid = $uuid;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }
