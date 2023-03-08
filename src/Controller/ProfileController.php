@@ -156,17 +156,17 @@ class ProfileController extends AbstractController
     }
 
 
-    #[Route('/profile/{id}', name: 'app_profile_show')]
-    public function show($id, EntityManagerInterface $em): Response
+    #[Route('/profile/{slug}', name: 'app_profile_show')]
+    public function show($slug, EntityManagerInterface $em): Response
     {
-        $user = $em->getRepository(User::class)->findOneBy(['id' => $id]);
+        $user = $em->getRepository(User::class)->findOneBy(['slug' => $slug]);
 
         if (!$user) {
             return $this->redirectToRoute('app_profile_not_found');
         }
 
         if ($this->getUser()) {
-            if ($user->getId() === $this->getUser()->getId()) {
+            if ($user->getSlug() === $this->getUser()->getSlug()) {
                 return $this->redirectToRoute('app_profile');
             }
         }

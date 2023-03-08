@@ -2,6 +2,21 @@
 
 {% block title %}Hello MapController!{% endblock %}
 
+{% block javascripts %}
+{{ parent() }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"
+    integrity="sha512-OFs3W4DIZ5ZkrDhBFtsCP6JXtMEDGmhl0QPlmWYBJay40TT1n3gt2Xuw8Pf/iezgW9CdabjkNChRqozl/YADmg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.min.css"
+    integrity="sha512-fYyZwU1wU0QWB4Yutd/Pvhy5J1oWAwFXun1pt+Bps04WSe4Aq6tyHlT4+MHSJhD8JlLfgLuC4CbCnX5KHSjyCg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+{% endblock %}
+
 {% block body %}
 <div class="container-y">
     <!-- map h-screen but withouth navbar -->
@@ -19,6 +34,8 @@
     //set view to france
     const map = L.map('map').setView([46.227638, 2.213749], 6);
 
+    let marker1;
+
     const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -31,10 +48,16 @@
 
     //get users from database
     let user;
+    var markers = L.markerClusterGroup();
     {% for user in users %}
     user_{{ user.id }} = { lat: '{{ user.latitude }}', lng: '{{ user.longitude }}' };
-    L.marker([user_{{ user.id }}.lat, user_{{ user.id }}.lng]).addTo(map)
-        .bindPopup('<a href="/profile/{{ user.id }}">{{ user.username }}</a>');  
+
+    marker1 = L.marker([user_{{ user.id }}.lat, user_{{ user.id }}.lng]).bindPopup('<a href="/profile/{{ user.slug }}">{{ user.username }}</a>');  
+
+        //cluster
+        markers.addLayer(marker1);
+
+        map.addLayer(markers);
     {% endfor %}
 </script>
 {% endblock %}

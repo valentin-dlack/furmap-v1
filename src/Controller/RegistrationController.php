@@ -54,6 +54,7 @@ class RegistrationController extends AbstractController
             $user->setCreatedAt(new \DateTimeImmutable());
             $user->setUpdatedAt(new \DateTimeImmutable());
             $user->setAvatar('default.png');
+            $user->setSlug(strtolower(str_replace(' ', '-', $user->getUsername()) . '-' . bin2hex(random_bytes(2))));
             $entityManager->persist($user);
 
             /* set default values social networks links */
