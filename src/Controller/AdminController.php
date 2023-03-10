@@ -127,19 +127,15 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/user/{id}', name: 'app_admin_user')]
-    public function user($id, EntityManagerInterface $em): Response
+    #[Route('/user/{uuid}', name: 'app_admin_user')]
+    public function user($uuid, EntityManagerInterface $em): Response
     {
-        if (!is_numeric($id)) {
-            throw $this->createNotFoundException('The user does not exist');
-        }
-
         /* User */
         $qb = $em->createQueryBuilder();
         $qb->select('u')
             ->from('App\Entity\User', 'u')
-            ->where('u.id = :id')
-            ->setParameter('id', $id);
+            ->where('u.uuid = :uuid')
+            ->setParameter('uuid', $uuid);
         $user = $qb->getQuery()->getOneOrNullResult();
 
         if (!$user) {
