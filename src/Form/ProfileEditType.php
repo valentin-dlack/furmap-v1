@@ -57,6 +57,7 @@ class ProfileEditType extends AbstractType
                             'image/jpeg',
                             'image/png',
                             'image/webp',
+                            'image/gif',
                         ],
                         'mimeTypesMessage' => 'Please upload a valid image (No GIFs)',
                     ])
