@@ -1,0 +1,51 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}ADMIN - Conventions{% endblock %}
+
+
+{% block body %}
+
+<div class="container p-5">
+    <div class="flex flex-row space-x-2 flex-wrap xl:flex-nowrap mt-3">
+        <div class="card w-full bg-zinc-800 shadow-xl">
+            <div class="card-body">
+                <div class="flex justify-between">
+                    <h2 class="card-title">Liste des conventions</h2>
+                    <a href="{{ path('app_admin_convention_create') }}" class="btn btn-sm btn-primary"><i class="fa-solid fa-plus mr-2"></i>Ajouter une convention</a>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="table w-full">
+                        <thead>
+                            <tr class="hover">
+                                <th>ID</th>
+                                <th>Nom</th>
+                                <th>Description</th>
+                                <th>Localisation</th>
+                                <th>Fréquentation</th>
+                                <th>Site web</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for conv in conventions %}
+                            <tr class="hover">
+                                <th>{{ conv.id }}</th>
+                                <td>{{ conv.name }}</td>
+                                <td>{{ conv.description | slice(0, 65) }}...</td>
+                                <td>{{ conv.locationDetails | slice(0, 65) }}...</td>
+                                <td>{{ conv.attendance }}</td>
+                                <td>{{ conv.website }}</td>
+                                <td>
+                                    <a href="{{ path('app_admin_convention', {'id': conv.id}) }}" class="btn btn-sm btn-primary"><i class="fa-solid fa-up-right-from-square"></i></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

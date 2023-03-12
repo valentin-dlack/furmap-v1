@@ -1,0 +1,129 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}ADMIN - Nouvelle Convention{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
+    <!-- js-mde -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- js-mde -->
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<div class="container p-5">
+    {{ form_start(form) }}
+    <div class="flex flex-row space-x-2 flex-wrap xl:flex-nowrap mt-3">
+        <div class="card w-1/2 bg-zinc-800 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">Détails de la convention</h2>
+                <div class="flex justify-between w-full">
+                    <div>
+                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom de la convention</label>
+                        {{ form_row(form.name) }}
+                    </div>
+                    <div>
+                        <label for="slug" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Slug</label>
+                        {{ form_row(form.slug) }}
+                    </div>
+                </div>
+                <div class="flex justify-between w-full">
+                    <div>
+                        <label for="start_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date de début</label>
+                        {{ form_row(form.start_date) }}
+                    </div>
+                    <div>
+                        <label for="end_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date de fin</label>
+                        {{ form_row(form.end_date) }}
+                    </div>
+                </div>
+                <div>
+                    <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
+                    {{ form_row(form.description) }}
+                </div>
+                <div class="flex justify-between w-full">
+                    <div>
+                        <label for="attendance" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fréquentation</label>
+                        {{ form_row(form.attendance) }}
+                    </div>
+                    <div>
+                        <label for="start_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Site web</label>
+                        {{ form_row(form.website) }}
+                    </div>
+                </div>
+                <div class="flex justify-between w-full">
+                    <div>
+                        <label for="last_year_made" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dernière année</label>
+                        {{ form_row(form.last_year_made) }}
+                    </div>
+                    <div>
+                        <label for="first_edition" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Première édition</label>
+                        {{ form_row(form.first_edition) }}
+                    </div>
+                </div>
+                <div>
+                    <label for="logo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Logo</label>
+                    {{ form_row(form.logo) }}
+                </div>
+            </div>
+        </div>
+        <div class="card w-1/2 bg-zinc-800 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">Localisation de la convention</h2>
+                <div id="map" style="height: 400px; width: 100%;"></div>
+                <div class="mt-2">
+                    <label for="location_details" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Détails de la localisation</label>
+                    {{ form_row(form.location_details) }}
+                </div>
+                {{ form_row(form.latitude) }}
+                {{ form_row(form.longitude) }}
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary w-full mt-4">Save</button>
+    {{ form_end(form) }}
+</div>
+
+<script id="js-datepicker">
+    flatpickr("#convention_start_date", {
+        dateFormat: "d/m/Y",
+        enableTime: false,
+    });
+    flatpickr("#convention_end_date", {
+        dateFormat: "d/m/Y",
+        enableTime: false,
+    });
+    flatpickr("#convention_last_year_made", {
+        dateFormat: "d/m/Y",
+        enableTime: false,
+    });
+    flatpickr("#convention_first_edition", {
+        dateFormat: "d/m/Y",
+        enableTime: false,
+    });
+</script>
+
+<script id="leaflet">
+    var map = L.map('map').setView([48.856614, 2.3522219], 3);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    var marker = L.marker([0, 0]).addTo(map);
+
+    map.on('click', function(e) {
+        marker.setLatLng(e.latlng);
+        document.getElementById('convention_latitude').value = e.latlng.lat;
+        document.getElementById('convention_longitude').value = e.latlng.lng;
+    });
+</script>
+
+{% endblock %}

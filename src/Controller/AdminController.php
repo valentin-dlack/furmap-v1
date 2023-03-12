@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Convention;
 use App\Entity\User;
+use App\Form\ConventionType;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Util\Json;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,6 +15,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
+use Intervention\Image\ImageManagerStatic as Image;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 #[Route('/control-admin')]
 class AdminController extends AbstractController
@@ -384,6 +388,141 @@ class AdminController extends AbstractController
         $this->addFlash('success', 'Report updated successfully!');
 
         return $this->redirectToRoute('app_admin_report', ['id' => $id]);
+    }
+
+    /* ------------------ CONVENTIONS ------------------ */
+
+    #[Route('/conventions', name: 'app_admin_conventions')]
+    public function conventions(EntityManagerInterface $em): Response
+    {
+        /* Get all conventions */
+        $qb = $em->createQueryBuilder();
+        $qb->select('c')
+            ->from('App\Entity\Convention', 'c')
+            ->orderBy('c.id', 'DESC');
+
+        $conventions = $qb->getQuery()->getResult();
+
+        return $this->render('admin/conventions/conventions.html.twig', [
+            'conventions' => $conventions,
+        ]);
+    }
+
+    //Create convention
+    #[Route('/convention/create', name: 'app_admin_convention_create')]
+    public function conventionCreate(EntityManagerInterface $em, Request $request): Response
+    {
+        $convention = new Convention();
+
+        $form = $this->createForm(ConventionType::class, $convention);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $convention = $form->getData();
+
+            //set latitude and longitude
+            if ($form->get('latitude')->getData() && $form->get('longitude')->getData()) {
+                $convention->setLatitude($form->get('latitude')->getData());
+                $convention->setLongitude($form->get('longitude')->getData());
+            } else {
+                $convention->setLatitude(null);
+                $convention->setLongitude(null);
+            }
+
+            /* ------ DATES ------ */
+            // date format is dd/mm/yyyy
+            //set start date
+            $startDate = $form->get('start_date')->getData();
+            $startDate = \DateTimeImmutable::createFromFormat('d/m/Y', $startDate);
+            $convention->setStartDate($startDate);
+
+            //set end date
+            $endDate = $form->get('end_date')->getData();
+            $endDate = \DateTimeImmutable::createFromFormat('d/m/Y', $endDate);
+            $convention->setEndDate($endDate);
+
+            //set last year date
+            $lastYearDate = $form->get('last_year_made')->getData();
+            $lastYearDate = \DateTimeImmutable::createFromFormat('d/m/Y', $lastYearDate);
+            $convention->setLastYearMade($lastYearDate);
+
+            //set first edition date
+            $firstYearDate = $form->get('first_edition')->getData();
+            $firstYearDate = \DateTimeImmutable::createFromFormat('d/m/Y', $firstYearDate);
+            $convention->setFirstEdition($firstYearDate);
+
+            /* ------ LOGO ------ */
+            //get logo
+            /** @var UploadedFile $avatar */
+            $logo = $form->get('logo')->getData();
+
+            // file upload
+            if ($logo) {
+                $originalFilename = pathinfo($logo->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.';
+
+                // if user already has an avatar, delete the old one
+                if ($convention->getLogo()) {
+                    $oldLogo = $this->getParameter('avatar_dir') . '/' . $convention->getLogo();
+                    if (file_exists($oldLogo)) {
+                        unlink($oldLogo);
+                    }
+                }
+
+                try {
+                    $image = Image::make($logo)->resize(300, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })->encode('webp', 80);
+                    $newFilename .= 'webp';
+
+                    $image->save($this->getParameter('avatar_dir') . '/' . $newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash('error', 'Error uploading logo');
+                }
+
+                $convention->setLogo($newFilename);
+            }
+
+            $em->persist($convention);
+            $em->flush();
+
+            $this->addFlash('success', 'Convention created successfully!');
+
+            return $this->redirectToRoute('app_admin_conventions');
+        }
+
+        return $this->render('admin/conventions/create_convention.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/convention/{id}', name: 'app_admin_convention')]
+    public function convention($id, EntityManagerInterface $em): Response
+    {
+        if (!is_numeric($id)) {
+            throw $this->createNotFoundException('The convention does not exist');
+        }
+
+        /* Convention */
+        $qb = $em->createQueryBuilder();
+        $qb->select('c')
+            ->from('App\Entity\Convention', 'c')
+            ->where('c.id = :id')
+            ->setParameter('id', $id);
+        $convention = $qb->getQuery()->getOneOrNullResult();
+
+        if (!$convention) {
+            throw $this->createNotFoundException('The convention does not exist');
+        }
+
+        $cleanDescription = str_replace('`', "\`", $convention->getDescription());
+        $cleanDescription = preg_replace('/\\\\([0-7]{1,3})/', '', $cleanDescription);
+
+        return $this->render('admin/conventions/show_convention.html.twig', [
+            'conv' => $convention,
+            'cleanDescription' => $cleanDescription,
+        ]);
     }
 
     /* ------------------ AUTO ------------------ */

@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class ProfileController extends AbstractController
 {
@@ -52,13 +53,28 @@ class ProfileController extends AbstractController
             if ($avatar) {
                 $originalFilename = pathinfo($avatar->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $avatar->guessExtension();
+                $newFilename = $safeFilename . '-' . uniqid() . '.';
+
+                // if user already has an avatar, delete the old one
+                if ($user->getAvatar()) {
+                    $oldAvatar = $this->getParameter('avatar_dir') . '/' . $user->getAvatar();
+                    if (file_exists($oldAvatar)) {
+                        unlink($oldAvatar);
+                    }
+                }
 
                 try {
-                    $avatar->move(
-                        $this->getParameter('avatar_dir'),
-                        $newFilename
-                    );
+                    // $avatar->move(
+                    //     $this->getParameter('avatar_dir'),
+                    //     $newFilename
+                    // );
+                    // compress image with intervention/image
+                    $image = Image::make($avatar)->resize(300, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })->encode('webp', 80);
+                    $newFilename .= 'webp';
+
+                    $image->save($this->getParameter('avatar_dir') . '/' . $newFilename);
                 } catch (FileException $e) {
                     $this->addFlash('error', 'Error uploading avatar');
                 }
@@ -70,9 +86,15 @@ class ProfileController extends AbstractController
             $user->setUpdatedAt(new \DateTimeImmutable());
 
             // upate position
+            $randomize = $request->request->get('randomize');
             if ($form->get('latitude')->getData() && $form->get('longitude')->getData()) {
-                $user->setLatitude($form->get('latitude')->getData());
-                $user->setLongitude($form->get('longitude')->getData());
+                if ($randomize) {
+                    $user->setLatitude($form->get('latitude')->getData() + rand(-100, 100) / 10000);
+                    $user->setLongitude($form->get('longitude')->getData() + rand(-100, 100) / 10000);
+                } else {
+                    $user->setLatitude($form->get('latitude')->getData());
+                    $user->setLongitude($form->get('longitude')->getData());
+                }
             }
 
             $em->persist($user);

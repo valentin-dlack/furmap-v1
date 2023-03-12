@@ -66,6 +66,10 @@
                 <li><a href="{{ path('app_admin_reports') }}"
                         {% if app.request.attributes.get('_route') == 'app_admin_reports' %}class="active"
                         {% endif %}>Signalements</a></li>
+                <li><a href="{{ path('app_admin_conventions') }}"
+                        {% if app.request.attributes.get('_route') == 'app_admin_conventions' %}class="active"
+                        {% endif %}>Conventions</a></li>
+                </li>
                 <li><a href="{{ path('app_admin_maps') }}"
                         {% if app.request.attributes.get('_route') == 'app_admin_maps' %}class="active"
                         {% endif %}>Cartes</a></li>

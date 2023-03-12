@@ -48,11 +48,20 @@
 
     //get users from database
     let user;
+    let data_popup;
     var markers = L.markerClusterGroup();
     {% for user in users %}
     user_{{ user.id }} = { lat: '{{ user.latitude }}', lng: '{{ user.longitude }}' };
 
-    marker1 = L.marker([user_{{ user.id }}.lat, user_{{ user.id }}.lng]).bindPopup('<a href="/profile/{{ user.slug }}">{{ user.username }}</a>');  
+    data_popup = `
+    <!-- profile picture with username/link to profile under it (don't squeeze the image) -->
+    <div class="text-center">
+        <img src="{{ asset('uploads/avatars/' ~ user.avatar) }}" alt="profile picture" class="rounded-sm max-w-md w-32 h-32 object-cover">
+        <a href="{{ path('app_profile_show', {'slug': user.slug}) }}" class="text-xl font-bold">{{ user.username }}</a>
+    </div>
+    `;
+
+    marker1 = L.marker([user_{{ user.id }}.lat, user_{{ user.id }}.lng]).bindPopup(data_popup);  
 
         //cluster
         markers.addLayer(marker1);

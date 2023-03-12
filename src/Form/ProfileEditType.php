@@ -52,11 +52,13 @@ class ProfileEditType extends AbstractType
                 'mapped' => false,
                 'constraints' => [
                     new File([
-                        'maxSize' => '3072k',
+                        'maxSize' => '4096k',
                         'mimeTypes' => [
-                            'image/*',
+                            'image/jpeg',
+                            'image/png',
+                            'image/webp',
                         ],
-                        'mimeTypesMessage' => 'Please upload a valid image',
+                        'mimeTypesMessage' => 'Please upload a valid image (No GIFs)',
                     ])
                 ],
             ])

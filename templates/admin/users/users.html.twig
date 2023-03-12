@@ -28,7 +28,7 @@
                             <!-- row 1 -->
                             {% for user in usersTable %}
                             <tr class="hover">
-                                <th>{{ user.uuid }}</th>
+                                <th>{{ user.uuid | slice(0, 5) }}...</th>
                                 <td>{{ user.username }}</td>
                                 <td>{{ user.email }}</td>
                                 <td>{{ user.description | slice(0, 65) }}...</td>
