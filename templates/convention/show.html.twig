@@ -5,7 +5,7 @@
 {% block body %}
 <main class="container mx-auto my-8 grid grid-cols-1 md:grid-cols-3 gap-8">
     <div class="flex flex-col justify-center items-center md:col-span-1">
-        <img class="rounded-md w-full h-max object-cover mb-4" src="{{ asset('/uploads/avatars/' ~ convention.logo) }}" alt="logo" />
+        <img class="rounded-md w-full h-52 object-cover mb-4" src="{{ asset('/uploads/avatars/' ~ convention.logo) }}" alt="logo" />
         <h2 class="text-5xl font-bold mb-2">{{ convention.name }}</h2>
         <h3 class="text-lg font-medium mb-2">Dates : <span class="font-bold">{{ convention.startDate | date('d/m/Y') }} - {{ convention.endDate | date('d/m/Y') }}</span></h3>
     </div>
