@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Convention;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,9 +23,19 @@ class MapController extends AbstractController
 
         $users = $qb->getQuery()->getResult();
 
+        //same with conventions
+        $qb = $em->createQueryBuilder();
+        $qb->select('c')
+            ->from(Convention::class, 'c')
+            ->where('c.latitude IS NOT NULL')
+            ->andWhere('c.longitude IS NOT NULL');
+
+        $conventions = $qb->getQuery()->getResult();
+
         return $this->render('map/index.html.twig', [
             'controller_name' => 'MapController',
             'users' => $users,
+            'conventions' => $conventions,
         ]);
     }
 }

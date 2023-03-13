@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Convention - {{ convention.name }}{% endblock %}
+
+{% block body %}
+<main class="container mx-auto my-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="flex flex-col justify-center items-center md:col-span-1">
+        <img class="rounded-md w-full h-max object-cover mb-4" src="{{ asset('/uploads/avatars/' ~ convention.logo) }}" alt="logo" />
+        <h2 class="text-5xl font-bold mb-2">{{ convention.name }}</h2>
+        <h3 class="text-lg font-medium mb-2">Dates : <span class="font-bold">{{ convention.startDate | date('d/m/Y') }} - {{ convention.endDate | date('d/m/Y') }}</span></h3>
+    </div>
+
+    <div class="md:col-span-2">
+        <h2 class="text-2xl font-bold mb-4">Map</h2>
+        <div id="map" class="h-96"></div>
+    </div>
+
+    <div class="md:col-span-1">
+        <h2 class="text-2xl font-bold mb-4">Details</h2>
+        <div class="flex flex-col space-y-4">
+            <div class="flex flex-col space-y-2">
+                <h3 class="text-lg font-bold">Location</h3>
+                <p class="text-base-content">{{ convention.locationDetails }}</p>
+            </div>
+            <div class="flex flex-col space-y-2">
+                <h3 class="text-lg font-bold">Attendees (Last edition)</h3>
+                <p class="text-base-content">{{ convention.attendance }}</p>
+            </div>
+            <div class="flex flex-col space-y-2">
+                <h3 class="text-lg font-bold">Website</h3>
+                <a href="{{ convention.website }}" class="link link-accent link-hover">{{ convention.website }}</a>
+            </div>
+            <div class="flex flex-col space-y-2">
+                <h3 class="text-lg font-bold">Date of the last edition</h3>
+                <p class="text-base-content">{{ convention.lastYearMade | date('d/m/Y') }}</p>
+            <div class="flex flex-col space-y-2">
+                <h3 class="text-lg font-bold">Date of the first edition</h3>
+                <p class="text-base-content">{{ convention.firstEdition | date('d/m/Y') }}</p>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="md:col-span-2">
+        <h2 class="text-2xl font-bold mb-4">Description</h2>
+        <!-- Marked markdown parser -->
+        <div id="description" class="mb-4 prose">
+        </div>
+    </div>
+</main>
+
+<script>
+    var map = L.map('map').setView([{{ convention.latitude }}, {{ convention.longitude }}], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    L.marker([{{ convention.latitude }}, {{ convention.longitude }}]).addTo(map)
+        .bindPopup("{{ convention.name }}")
+        .openPopup();
+</script>
+
+<script id="markdown">
+    document.getElementById('description').innerHTML = DOMPurify.sanitize(marked.parse(`{{ cleanDescription|raw }}`));
+</script>
+
+{% endblock %}

@@ -54,6 +54,9 @@
                         <li><a href="{{ url('app_map') }}"
                                 {% if app.request.attributes.get('_route') == 'app_map' %}class="font-bold"
                                 {% endif %}>Map</a></li>
+                        <li><a href="{{ url('app_convention') }}"
+                                {% if app.request.attributes.get('_route') == 'app_convention' %}class="font-bold"
+                                {% endif %}>Conventions</a></li>
                         <li><a href="{{ url('app_about') }}"
                                 {% if app.request.attributes.get('_route') == 'app_about' %}class="font-bold"
                                 {% endif %}>About</a></li>
@@ -123,6 +126,9 @@
                 <li><a href="{{ url('app_map') }}"
                         {% if app.request.attributes.get('_route') == 'app_map' %}class="font-bold" {% endif %}>Map</a>
                 </li>
+                <li><a href="{{ url('app_convention') }}"
+                        {% if app.request.attributes.get('_route') == 'app_convention' %}class="font-bold"
+                        {% endif %}>Conventions</a></li>
                 <li><a href="{{ url('app_about') }}"
                         {% if app.request.attributes.get('_route') == 'app_about' %}class="font-bold"
                         {% endif %}>About</a></li>
@@ -130,7 +136,6 @@
                         {% if app.request.attributes.get('_route') == 'app_contact' %}class="font-bold"
                         {% endif %}>Contact Me</a></li>
             </ul>
-
         </div>
     </div>
 </body>

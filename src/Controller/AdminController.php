@@ -49,6 +49,10 @@ class AdminController extends AbstractController
         /* Total reports compared to last month in percentage */
         $totalReportsComparePercentage = ($totalReportsCompare / ($totalReportsLastMonth == 0 ? 1 : $totalReportsLastMonth)) * 100;
 
+        /* --- Conventions --- */
+        /* Total conventions */
+        $totalConventions = $em->createQuery('SELECT COUNT(c.id) FROM App\Entity\Convention c')->getSingleScalarResult();
+
         //graph data
         /* Line graph of total users per month */
         //get all users that have created_at not null
@@ -108,6 +112,7 @@ class AdminController extends AbstractController
             'totalReportsCompare' => $totalReportsCompare,
             'totalReportsComparePercent' => $totalReportsComparePercentage,
             'usersPerMonthAndYear' => $usersPerMonthAndYear,
+            'totalConventions' => $totalConventions,
             // TABLES
             'usersTable' => $usersTable,
             'reportsTable' => $reportsTable,
@@ -235,7 +240,7 @@ class AdminController extends AbstractController
         // get token from request
         $token = $request->request->get('_token');
         // check if token is valid
-        if (!$this->isCsrfTokenValid(('delete-user' . $id), $token)) {
+        if (!$this->isCsrfTokenValid(('delete-conv' . $id), $token)) {
             throw $this->createAccessDeniedException('Invalid CSRF token');
         }
 
@@ -523,6 +528,134 @@ class AdminController extends AbstractController
             'conv' => $convention,
             'cleanDescription' => $cleanDescription,
         ]);
+    }
+
+    #[Route('/convention/{id}/edit', name: 'app_admin_convention_edit')]
+    public function conventionEdit($id, EntityManagerInterface $em, Request $request): Response
+    {
+        if (!is_numeric($id)) {
+            throw $this->createNotFoundException('The convention does not exist');
+        }
+
+        /* Convention */
+        $qb = $em->createQueryBuilder();
+        $qb->select('c')
+            ->from('App\Entity\Convention', 'c')
+            ->where('c.id = :id')
+            ->setParameter('id', $id);
+        $convention = $qb->getQuery()->getOneOrNullResult();
+
+        if (!$convention) {
+            throw $this->createNotFoundException('The convention does not exist');
+        }
+
+        $form = $this->createForm(ConventionType::class, $convention);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $convention = $form->getData();
+
+            //set latitude and longitude
+            if ($form->get('latitude')->getData() && $form->get('longitude')->getData()) {
+                $convention->setLatitude($form->get('latitude')->getData());
+                $convention->setLongitude($form->get('longitude')->getData());
+            } else {
+                $convention->setLatitude(null);
+                $convention->setLongitude(null);
+            }
+
+            /* ------ DATES ------ */
+            // date format is dd/mm/yyyy
+            //set start date
+            $startDate = $form->get('start_date')->getData();
+            $startDate = \DateTimeImmutable::createFromFormat('d/m/Y', $startDate);
+            $convention->setStartDate($startDate);
+
+            //set end date
+            $endDate = $form->get('end_date')->getData();
+            $endDate = \DateTimeImmutable::createFromFormat('d/m/Y', $endDate);
+            $convention->setEndDate($endDate);
+
+            //set last year date
+            $lastYearDate = $form->get('last_year_made')->getData();
+            $lastYearDate = \DateTimeImmutable::createFromFormat('d/m/Y', $lastYearDate);
+            $convention->setLastYearMade($lastYearDate);
+
+            //set first edition date
+            $firstYearDate = $form->get('first_edition')->getData();
+            $firstYearDate = \DateTimeImmutable::createFromFormat('d/m/Y', $firstYearDate);
+            $convention->setFirstEdition($firstYearDate);
+
+            /* ------ LOGO ------ */
+            //get logo
+            /** @var UploadedFile $avatar */
+            $logo = $form->get('logo')->getData();
+
+            // file upload
+            if ($logo) {
+                $originalFilename = pathinfo($logo->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.';
+
+                // if user already has an avatar, delete the old one
+                if ($convention->getLogo()) {
+                    $oldLogo = $this->getParameter('avatar_dir') . '/' . $convention->getLogo();
+                    if (file_exists($oldLogo)) {
+                        unlink($oldLogo);
+                    }
+                }
+
+                try {
+                    $image = Image::make($logo)->resize(300, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })->encode('webp', 80);
+                    $newFilename .= 'webp';
+
+                    $image->save($this->getParameter('avatar_dir') . '/' . $newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash('error', 'Error uploading logo');
+                }
+
+                $convention->setLogo($newFilename);
+            }
+
+            $em->persist($convention);
+            $em->flush();
+
+            $this->addFlash('success', 'Convention updated successfully!');
+        }
+
+        return $this->render('admin/conventions/create_convention.html.twig', [
+            'form' => $form->createView(),
+            'conv' => $convention,
+        ]);
+    }
+
+    #[Route('/convention/{id}/delete', name: 'app_admin_convention_delete')]
+    public function conventionDelete($id, EntityManagerInterface $em): Response
+    {
+        if (!is_numeric($id)) {
+            throw $this->createNotFoundException('The convention does not exist');
+        }
+
+        /* Convention */
+        $qb = $em->createQueryBuilder();
+        $qb->select('c')
+            ->from('App\Entity\Convention', 'c')
+            ->where('c.id = :id')
+            ->setParameter('id', $id);
+        $convention = $qb->getQuery()->getOneOrNullResult();
+
+        if (!$convention) {
+            throw $this->createNotFoundException('The convention does not exist');
+        }
+
+        $em->remove($convention);
+        $em->flush();
+
+        $this->addFlash('success', 'Convention deleted successfully!');
+
+        return $this->redirectToRoute('app_admin_conventions');
     }
 
     /* ------------------ AUTO ------------------ */
