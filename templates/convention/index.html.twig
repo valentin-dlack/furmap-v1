@@ -4,7 +4,74 @@
 
 {% block body %}
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-</div>
+<div class="min-h-screen bg-base-100 flex flex-col">
+    <main class="flex-grow">
+      <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="px-4 py-6 sm:px-0">
+          <!-- Search bar -->
+          <form action="/conventions" method="post" class="w-full">
+              <div class="form-control">
+                  <div class="input-group">
+                      <select
+                          class="input input-bordered w-32 bg-base-100 border-r-0 focus:border-r-0 focus:ring-0 text-white"
+                          name="continent">
+                          <option value="all" {% if continent == 'all' %}selected{% endif %}>All</option>
+                          <option value="america" {% if continent == 'america' %}selected{% endif %}>America</option>
+                          <option value="europe" {% if continent == 'europe' %}selected{% endif %}>Europe</option>
+                          <option value="asia" {% if continent == 'asia' %}selected{% endif %}>Asia</option>
+                          <option value="africa" {% if continent == 'africa' %}selected{% endif %}>Africa</option>
+                          <option value="oceania" {% if continent == 'oceania' %}selected{% endif %}>Oceania</option>
+                      </select>
+                      <input type="text" placeholder="Search…" class="input input-bordered w-full rounded-l-lg"
+                          id="search" name="search" value="{{ search }}">
+                      <button class="btn btn-primary rounded-r-lg">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                              stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                          </svg>
+                      </button>
+                  </div>
+              </div>
+              <!-- Order by -->
+              <div class="mt-4">
+                  <label for="order_by" class="sr-only">Order by</label>
+                  <select class="input input-bordered w-48" id="order_by" name="order_by" onchange="this.form.submit()">
+                      <option value="" disabled {% if order_by == '' %}selected{% endif %} hidden>Order by</option>
+                      <option value="most_attendees" {% if order_by == 'most_attendees' %}selected{% endif %}>Most attendees</option>
+                      <option value="least_attendees" {% if order_by == 'least_attendees' %}selected{% endif %}>Least attendees</option>
+                      <option value="closest" {% if order_by == 'closest' %}selected{% endif %}>Closest (date)</option>
+                      <option value="farthest" {% if order_by == 'farthest' %}selected{% endif %}>Farthest (date)</option>
+                  </select>
+              </div>
+          </form>
+          
+          
+          <!-- Card Grid -->
+          <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {% for conv in conventions %}
+            <div class="card card-bordered bg-black/30">
+              <figure>
+                <img src="{{ asset('/uploads/avatars/' ~ conv.logo) }}" alt="convention logo" class="rounded-t-lg bg-white h-48 w-full object-scale-down" />
+              </figure>
+              <div class="card-body">
+                <h2 class="card-title">{{ conv.name }}</h2>
+                <p>{{ conv.description | slice(0, 65) }}...</p>
+                <div class="card-actions">
+                  <a href="{{ path('app_convention_show', {'slug': conv.slug}) }}" class="btn btn-primary w-full">See more</a>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+            {% if conventions|length == 0 %}
+            <div class="card card-body">
+              <p class="text-center">No conventions found.</p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  
 {% endblock %}

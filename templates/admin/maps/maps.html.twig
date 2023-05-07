@@ -2,6 +2,20 @@
 
 {% block title %}ADMIN - Cartes{% endblock %}
 
+{% block javascripts %}
+{{ parent() }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"
+    integrity="sha512-OFs3W4DIZ5ZkrDhBFtsCP6JXtMEDGmhl0QPlmWYBJay40TT1n3gt2Xuw8Pf/iezgW9CdabjkNChRqozl/YADmg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.min.css"
+    integrity="sha512-fYyZwU1wU0QWB4Yutd/Pvhy5J1oWAwFXun1pt+Bps04WSe4Aq6tyHlT4+MHSJhD8JlLfgLuC4CbCnX5KHSjyCg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+{% endblock %}
 
 {% block body %}
 
@@ -49,12 +63,41 @@
       {% endfor %}
 
     /* CONVENTIONS MAP */
-    const map2 = L.map('mapid2').setView([46.227638, 2.213749], 4);
+    const map2 = L.map('mapid2').setView([46.227638, 2.213749], 2);
 
     const tiles2 = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map2);
+
+    var conventionIcon = L.icon({
+        iconUrl: '{{ asset('build/images/convention-x2.png') }}',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+    });
+
+    //conventions pins
+    let convention, data_popup_convention;
+    var markers_convention = L.markerClusterGroup();
+    {% for convention in conventions %}
+    convention_{{ convention.id }} = { lat: '{{ convention.latitude }}', lng: '{{ convention.longitude }}' };
+
+    data_popup_convention = `
+    <div class="text-center">
+        <img src="{{ asset('uploads/avatars/' ~ convention.logo) }}" alt="convention picture" class="rounded-sm max-w-md w-32 h-full object-cover">
+        <a href="{{ path('app_admin_convention', {'id': convention.id}) }}" class="text-xl font-bold"><i class="fa-solid fa-building ml-2"></i> {{ convention.name }}</a>
+    </div>
+    `;
+
+    marker1 = L.marker([convention_{{ convention.id }}.lat, convention_{{ convention.id }}.lng], {icon: conventionIcon}).bindPopup(data_popup_convention); 
+
+        //cluster
+        markers_convention.addLayer(marker1);
+
+        map2.addLayer(markers_convention);
+    {% endfor %}
 
 
     /* EVENTS MAP */

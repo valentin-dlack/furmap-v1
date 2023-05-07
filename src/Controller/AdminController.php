@@ -38,7 +38,7 @@ class AdminController extends AbstractController
         /* Compare total users to last month */
         $totalUsersCompare = $totalUsers - $totalUsersLastMonth;
         /* Total users compared to last month in percentage */
-        $totalUsersComparePercentage = ($totalUsersCompare / $totalUsersLastMonth) * 100;
+        $totalUsersComparePercentage = ($totalUsersCompare / ($totalUsersLastMonth == 0 ? 1 : $totalUsersLastMonth)) * 100;
         
         /* Total reports */
         $totalReports = $em->createQuery('SELECT COUNT(r.id) FROM App\Entity\Report r')->getSingleScalarResult();
@@ -681,8 +681,18 @@ class AdminController extends AbstractController
 
         $users = $qb->getQuery()->getResult();
 
+        //get all conventions that have latitude and longitude not null
+        $qb = $em->createQueryBuilder();
+        $qb->select('c')
+            ->from(Convention::class, 'c')
+            ->where('c.latitude IS NOT NULL')
+            ->andWhere('c.longitude IS NOT NULL');
+
+        $conventions = $qb->getQuery()->getResult();
+
         return $this->render('admin/maps/maps.html.twig', [
             'users' => $users,
+            'conventions' => $conventions,
         ]);
     }
 

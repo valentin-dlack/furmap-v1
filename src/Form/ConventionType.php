@@ -39,7 +39,7 @@ class ConventionType extends AbstractType
                     'placeholder' => 'Description',
                     'class' => 'w-full mx-auto input input-bordered focus:input-primary',
                     'style' => 'height: 275px;',
-                    'maxlength' => 750,
+                    'maxlength' => 2500,
                 ],
                 'label' => false,
             ])
@@ -54,18 +54,18 @@ class ConventionType extends AbstractType
             ])
             ->add('latitude', TextType::class, [
                 'attr' => [
-                    'class' => 'hidden',
+                    'class' => 'input input-bordered focus:input-primary',
                     'id' => 'longitude',
-                    'value' => '',
+                    'placeholder' => 'Latitude',
                 ],
                 'label' => false,
                 'required' => false,
             ])
             ->add('longitude', TextType::class, [
                 'attr' => [
-                    'class' => 'hidden',
+                    'class' => 'input input-bordered focus:input-primary',
                     'id' => 'longitude',
-                    'value' => '',
+                    'placeholder' => 'Longitude',
                 ],
                 'label' => false,
                 'required' => false,
