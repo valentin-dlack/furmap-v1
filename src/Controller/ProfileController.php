@@ -97,6 +97,12 @@ class ProfileController extends AbstractController
                 }
             }
 
+            //clean description, remove octal escape sequences and prevent XSS
+            $cleanDescription = preg_replace('/\\\\([0-7]{1,3})/', '', $form->get('description')->getData());
+            $cleanDescription = htmlspecialchars($cleanDescription, ENT_QUOTES, 'UTF-8');
+            $user->setDescription($cleanDescription);
+
+
             $em->persist($user);
             $em->flush();
             $this->addFlash('success', 'Profile updated successfully');

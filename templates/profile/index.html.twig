@@ -209,6 +209,6 @@
 </script>
 
 <script id="markdown">
-        document.getElementById('description').innerHTML = DOMPurify.sanitize(marked.parse(`{{ cleanDescription|raw }}`));
+        document.getElementById('description').innerHTML = DOMPurify.sanitize(marked.parse(`{{ cleanDescription|striptags|raw }}`));
 </script>
 {% endblock %}
