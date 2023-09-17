@@ -96,8 +96,26 @@
                 </div>
             </div>
         </div>
+        <div class=" bg-white rounded-lg shadow dark:border xl:p-0 dark:bg-white/10 backdrop-blur-2xl dark:border-gray-700 p-5 md:w-full mx-auto mt-3 xl:mt-2">
+            <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                    Edit your tags
+                </h1>
+                {% set tagsList = ['artist', 'fursuiter', 'fursuitmaker', 'photographer'] %}
+                {% set tagNames = {'artist': 'Artist', 'fursuiter': 'Fursuiter', 'fursuitmaker': 'Fursuit Maker', 'photographer': 'Photographer'} %}
+                {% for tagKey in tagsList %}
+                    {% set isChecked = tagKey in user.tags %}
+                    <label for="tag_{{ tagKey }}" class="btn btn-outline btn-secondary">
+                        <span class="mr-2">{{ tagNames[tagKey] }}</span>
+                        <input type="checkbox" class="checkbox checkbox-secondary" id="tag_{{ tagKey }}" name="tag_{{ tagKey }}" {{ isChecked ? 'checked' : '' }}>
+                    </label>
+                {% endfor %}
+            </div>
+        </div>
     </div>
+
   </div>
+    
   {{ form_end(form) }}
 
 

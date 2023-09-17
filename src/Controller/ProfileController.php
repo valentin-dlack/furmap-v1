@@ -102,6 +102,15 @@ class ProfileController extends AbstractController
             $cleanDescription = htmlspecialchars($cleanDescription, ENT_QUOTES, 'UTF-8');
             $user->setDescription($cleanDescription);
 
+            //tags support
+            //tags are : #tag_artist, #tag_fursuiter, #tag_fursuitmaker, #tag_photographer
+            $tags = [];
+            $request->request->has('tag_artist') ? array_push($tags, 'artist') : null;
+            $request->request->has('tag_fursuiter') ? array_push($tags, 'fursuiter') : null;
+            $request->request->has('tag_fursuitmaker') ? array_push($tags, 'fursuitmaker') : null;
+            $request->request->has('tag_photographer') ? array_push($tags, 'photographer') : null;
+            $user->setTags($tags);
+
 
             $em->persist($user);
             $em->flush();

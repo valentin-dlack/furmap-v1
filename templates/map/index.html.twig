@@ -29,65 +29,9 @@
         </div>
     </div>
 </div>
-
 <script>
-    //set view
-    const map=L.map("map").setView([46.227638,2.213749],6);
-    let marker1;
-    const tiles=L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{
-        maxZoom:19,
-        attribution:'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map),
-    marker=L.marker([0,0],{opacity:0}).addTo(map);
-    let user,data_popup;
-    var markers=L.markerClusterGroup();
-    //users pins
-    {% for user in users %}
-    user_{{ user.id }} = { lat: '{{ user.latitude }}', lng: '{{ user.longitude }}' };
-
-    data_popup = `
-    <div class="text-center">
-        <img src="{{ asset('uploads/avatars/' ~ user.avatar) }}" alt="profile picture" class="rounded-sm max-w-md w-32 h-32 object-cover">
-        <a href="{{ path('app_profile_show', {'slug': user.slug}) }}" class="text-xl font-bold">{{ user.username }}</a>
-    </div>
-    `;
-
-    marker1 = L.marker([user_{{ user.id }}.lat, user_{{ user.id }}.lng]).bindPopup(data_popup);  
-
-        //cluster
-        markers.addLayer(marker1);
-
-        map.addLayer(markers);
-    {% endfor %}
-
-    //custom convention icon
-    var conventionIcon = L.icon({
-        iconUrl: '{{ asset('build/images/convention-x2.png') }}',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-    });
-
-    //conventions pins
-    let convention, data_popup_convention;
-    var markers_convention = L.markerClusterGroup();
-    {% for convention in conventions %}
-    convention_{{ convention.id }} = { lat: '{{ convention.latitude }}', lng: '{{ convention.longitude }}' };
-
-    data_popup_convention = `
-    <div class="text-center">
-        <img src="{{ asset('uploads/avatars/' ~ convention.logo) }}" alt="convention picture" class="rounded-sm max-w-md w-32 h-full object-cover mx-auto">
-        <a href="{{ path('app_convention_show', {'slug': convention.slug}) }}" class="text-xl font-bold"><i class="fa-solid fa-building ml-2"></i> {{ convention.name }}</a>
-    </div>
-    `;
-
-    marker1 = L.marker([convention_{{ convention.id }}.lat, convention_{{ convention.id }}.lng], {icon: conventionIcon}).bindPopup(data_popup_convention); 
-
-        //cluster
-        markers_convention.addLayer(marker1);
-
-        map.addLayer(markers_convention);
-    {% endfor %}
+    var iconConv = '{{ asset('build/images/convention-x2.png') }}';
+    var dataPath = '{{ path('app_map_api') }}';
 </script>
+<script src="{{ asset('build/js/map.js') }}"></script>
 {% endblock %}

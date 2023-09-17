@@ -26,7 +26,7 @@
         "build": "encore production --progress"
     },
     "dependencies": {
-        "daisyui": "^2.51.1",
+        "daisyui": "^3.7.5",
         "marked": "^4.2.12"
     }
 }

@@ -7,7 +7,23 @@
     <!-- Left column - Profile picture and basic information -->
     <div class="flex flex-col justify-center items-center md:col-span-1">
         <img class="rounded-full w-40 h-40 object-cover mb-4" src="{{ asset('/uploads/avatars/' ~ user.avatar) }}" alt="avatar" />
-        <h2 class="text-2xl font-bold mb-2">{{ user.username }}</h2>
+        <h2 class="text-2xl font-bold mb-2">{{ user.username }}
+            {% if user.isVerified %}
+            <div class="tooltip" data-tip="Verified"><i class="fa-solid fa-check-circle text-green-500"></i></div>
+            {% endif %}
+            <!-- Tags -->
+            {% if user.tags is not empty %}
+                {% for tag in user.tags %}
+                <span class="tag tag-accent">
+                    {% if tag == "fursuiter" %}<div class="tooltip" data-tip="Fursuiter"><i class="fa-solid fa-paw"></i></div>
+                    {% elseif tag == "artist" %}<div class="tooltip" data-tip="Artist"><i class="fa-solid fa-palette"></i></div>
+                    {% elseif tag == "photographer" %}<div class="tooltip" data-tip="Photographer"><i class="fa-solid fa-camera"></i></div>
+                    {% elseif tag == "fursuit_maker" %}<div class="tooltip" data-tip="Fursuit Maker"><i class="fa-solid fa-sewing-needle"></i></div>
+                    {% endif %}
+                </span>
+                {% endfor %}
+            {% endif %}
+        </h2>
         <h3 class="text-lg font-medium mb-2">Member since {{ user.createdAt|date('d/m/Y') }}</h3>
         {% if app.user == user %}
         <div class="flex space-x-2">
@@ -50,69 +66,69 @@
     <div class="md:col-span-1">
         <h2 class="text-2xl font-bold mb-4">Social Networks</h2>
         <!-- flex row with 2 buttons next to each other make w-full when on mobile -->
-        <div class="flex flex-row w-full flex-wrap">
+        <div class="flex flex-row w-full flex-wrap space-x-1">
             <!-- Discord & Twitter-->
             {% if socials.discord is not empty %}
-            <button class="btn btn-circle w-1/2"><i class="fa-brands fa-discord mr-5 text-xl"></i><span class="btn-discord">{{ socials.discord[:17] ~ (socials.discord | length > 17 ? '...')}}</span></button>
+            <button class="btn btn-circle w-2/5"><i class="fa-brands fa-discord mr-2 text-xl"></i><span class="btn-discord">{{ socials.discord[:17] ~ (socials.discord | length > 17 ? '...')}}</span></button>
             {% endif %}
             {% if socials.twitter is not empty %}
-            <a href="https://twitter.com/{{ socials.twitter }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-twitter mr-5 text-xl"></i>@{{ socials.twitter[:17] ~ (socials.twitter | length > 17 ? '...')}}</a>
+            <a href="https://twitter.com/{{ socials.twitter }}" class="btn btn-circle w-2/5"><i class="fa-brands fa-twitter mr-2 text-xl"></i>@{{ socials.twitter[:17] ~ (socials.twitter | length > 17 ? '...')}}</a>
             {% endif %}
             <!-- Instagram & Twitch -->
             {% if socials.instagram is not empty %}
-            <a href="https://instagram.com/{{ socials.instagram }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-instagram mr-5 text-xl"></i>@{{ socials.instagram[:17] ~ (socials.instagram | length > 17 ? '...')}}</a>
+            <a href="https://instagram.com/{{ socials.instagram }}" class="btn btn-circle w-2/5"><i class="fa-brands fa-instagram mr-2 text-xl"></i>@{{ socials.instagram[:17] ~ (socials.instagram | length > 17 ? '...')}}</a>
             {% endif %}
             {% if socials.twitch is not empty %}
-            <a href="https://twitch.tv/{{ socials.twitch }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-twitch mr-5 text-xl"></i>@{{ socials.twitch[:17] ~ (socials.twitch | length > 17 ? '...')}}</a>
+            <a href="https://twitch.tv/{{ socials.twitch }}" class="btn btn-circle w-2/5"><i class="fa-brands fa-twitch mr-2 text-xl"></i>@{{ socials.twitch[:17] ~ (socials.twitch | length > 17 ? '...')}}</a>
             {% endif %}
             <!-- Youtube & Telegram -->
             {% if socials.youtube is not empty %}
-            <a href="https://youtube.com/{{ socials.youtube }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-youtube mr-5 text-xl"></i>{{ socials.youtube[:17] ~ (socials.youtube | length > 17 ? '...')}}</a>
+            <a href="https://youtube.com/{{ socials.youtube }}" class="btn btn-circle w-2/5"><i class="fa-brands fa-youtube mr-2 text-xl"></i>{{ socials.youtube[:17] ~ (socials.youtube | length > 17 ? '...')}}</a>
             {% endif %}
             {% if socials.telegram is not empty %}
-            <a href="https://t.me/{{ socials.telegram }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-telegram mr-5 text-xl"></i>@{{ socials.telegram[:17] ~ (socials.telegram | length > 17 ? '...')}}</a>
+            <a href="https://t.me/{{ socials.telegram }}" class="btn btn-circle w-2/5"><i class="fa-brands fa-telegram mr-2 text-xl"></i>@{{ socials.telegram[:17] ~ (socials.telegram | length > 17 ? '...')}}</a>
             {% endif %}
             <!-- Steam & Reddit -->
             {% if socials.steam is not empty %}
-            <a href="https://steamcommunity.com/id/{{ socials.steam }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-steam mr-5 text-xl"></i>{{ socials.steam[:17] ~ (socials.steam | length > 17 ? '...')}}</a>
+            <a href="https://steamcommunity.com/id/{{ socials.steam }}" class="btn btn-circle w-2/5"><i class="fa-brands fa-steam mr-2 text-xl"></i>{{ socials.steam[:17] ~ (socials.steam | length > 17 ? '...')}}</a>
             {% endif %}
             {% if socials.reddit is not empty %}
-            <a href="https://reddit.com/u/{{ socials.reddit }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-reddit mr-5 text-xl"></i>{{ socials.reddit[:17] ~ (socials.reddit | length > 17 ? '...')}}</a>
+            <a href="https://reddit.com/u/{{ socials.reddit }}" class="btn btn-circle w-2/5"><i class="fa-brands fa-reddit mr-2 text-xl"></i>{{ socials.reddit[:17] ~ (socials.reddit | length > 17 ? '...')}}</a>
             {% endif %}
             <!-- Tiktok & Facebook -->
             {% if socials.tiktok is not empty %}
-            <a href="https://tiktok.com/@{{ socials.tiktok }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-tiktok mr-5 text-xl"></i>{{ socials.tiktok[:17] ~ (socials.tiktok | length > 17 ? '...')}}</a>
+            <a href="https://tiktok.com/@{{ socials.tiktok }}" class="btn btn-circle w-2/5"><i class="fa-brands fa-tiktok mr-2 text-xl"></i>{{ socials.tiktok[:17] ~ (socials.tiktok | length > 17 ? '...')}}</a>
             {% endif %}
             {% if socials.facebook is not empty %}
-            <a href="https://facebook.com/{{ socials.facebook }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-facebook mr-5 text-xl"></i>{{ socials.facebook[:17] ~ (socials.facebook | length > 17 ? '...')}}</a>
+            <a href="https://facebook.com/{{ socials.facebook }}" class="btn btn-circle w-2/5"><i class="fa-brands fa-facebook mr-2 text-xl"></i>{{ socials.facebook[:17] ~ (socials.facebook | length > 17 ? '...')}}</a>
             {% endif %}
             <!-- github & gitlab -->
             {% if socials.github is not empty %}
-            <a href="https://github.com/{{ socials.github }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-github mr-5 text-xl"></i>{{ socials.github[:17] ~ (socials.github | length > 17 ? '...')}}</a>
+            <a href="https://github.com/{{ socials.github }}" class="btn btn-circle w-2/5"><i class="fa-brands fa-github mr-2 text-xl"></i>{{ socials.github[:17] ~ (socials.github | length > 17 ? '...')}}</a>
             {% endif %}
             {% if socials.gitlab is not empty %}
-            <a href="https://gitlab.com/{{ socials.gitlab }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-gitlab mr-5 text-xl"></i>{{ socials.gitlab[:17] ~ (socials.gitlab | length > 17 ? '...')}}</a>
+            <a href="https://gitlab.com/{{ socials.gitlab }}" class="btn btn-circle w-2/5"><i class="fa-brands fa-gitlab mr-2 text-xl"></i>{{ socials.gitlab[:17] ~ (socials.gitlab | length > 17 ? '...')}}</a>
             {% endif %}
             <!-- Tumblr & Soundcloud -->
             {% if socials.tumblr is not empty %}
-            <a href="https://{{ socials.tumblr }}.tumblr.com" class="btn btn-circle w-1/2"><i class="fa-brands fa-tumblr mr-5 text-xl"></i>{{ socials.tumblr[:17] ~ (socials.tumblr | length > 17 ? '...')}}</a>
+            <a href="https://{{ socials.tumblr }}.tumblr.com" class="btn btn-circle w-2/5"><i class="fa-brands fa-tumblr mr-2 text-xl"></i>{{ socials.tumblr[:17] ~ (socials.tumblr | length > 17 ? '...')}}</a>
             {% endif %}
             {% if socials.soundcloud is not empty %}
-            <a href="https://soundcloud.com/{{ socials.soundcloud }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-soundcloud mr-5 text-xl"></i>{{ socials.soundcloud[:17] ~ (socials.soundcloud | length > 17 ? '...')}}</a>
+            <a href="https://soundcloud.com/{{ socials.soundcloud }}" class="btn btn-circle w-2/5"><i class="fa-brands fa-soundcloud mr-2 text-xl"></i>{{ socials.soundcloud[:17] ~ (socials.soundcloud | length > 17 ? '...')}}</a>
             {% endif %}
             <!-- Deviantart & Furaffinity -->
             {% if socials.deviantart is not empty %}
-            <a href="https://{{ socials.deviantart }}.deviantart.com" class="btn btn-circle w-1/2"><i class="fa-brands fa-deviantart mr-5 text-xl"></i>{{ socials.deviantart[:17] ~ (socials.deviantart | length > 17 ? '...')}}</a>
+            <a href="https://{{ socials.deviantart }}.deviantart.com" class="btn btn-circle w-2/5"><i class="fa-brands fa-deviantart mr-2 text-xl"></i>{{ socials.deviantart[:17] ~ (socials.deviantart | length > 17 ? '...')}}</a>
             {% endif %}
             {% if socials.furaffinity is not empty %}
-            <a href="https://furaffinity.net/user/{{ socials.furaffinity }}" class="btn btn-circle w-1/2"><i class="fa-solid fa-paw mr-5 text-xl"></i>{{ socials.furaffinity[:17] ~ (socials.furaffinity | length > 17 ? '...')}}</a>
+            <a href="https://furaffinity.net/user/{{ socials.furaffinity }}" class="btn btn-circle w-2/5"><i class="fa-solid fa-paw mr-2 text-xl"></i>{{ socials.furaffinity[:17] ~ (socials.furaffinity | length > 17 ? '...')}}</a>
             {% endif %}
             <!-- VK & Skype -->
             {% if socials.vk is not empty %}
-            <a href="https://vk.com/{{ socials.vk }}" class="btn btn-circle w-1/2"><i class="fa-brands fa-vk mr-5 text-xl"></i>{{ socials.vk[:17] ~ (socials.vk | length > 17 ? '...')}}</a>
+            <a href="https://vk.com/{{ socials.vk }}" class="btn btn-circle w-2/5"><i class="fa-brands fa-vk mr-2 text-xl"></i>{{ socials.vk[:17] ~ (socials.vk | length > 17 ? '...')}}</a>
             {% endif %}
             {% if socials.skype is not empty %}
-            <a href="skype:{{ socials.skype }}?chat" class="btn btn-circle w-1/2"><i class="fa-brands fa-skype mr-5 text-xl"></i>{{ socials.skype[:17] ~ (socials.skype | length > 17 ? '...')}}</a>
+            <a href="skype:{{ socials.skype }}?chat" class="btn btn-circle w-2/5"><i class="fa-brands fa-skype mr-2 text-xl"></i>{{ socials.skype[:17] ~ (socials.skype | length > 17 ? '...')}}</a>
             {% endif %}
         </div>
 

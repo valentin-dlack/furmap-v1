@@ -1,0 +1,4 @@
+<div class="text-center">
+    <img src="{{ asset('uploads/avatars/' ~ user.avatar) }}" alt="profile picture" class="rounded-sm max-w-md w-32 h-32 object-cover">
+    <a href="{{ path('app_profile_show', {'slug': user.slug}) }}" class="text-xl font-bold">{{ user.username }}</a>
+</div>

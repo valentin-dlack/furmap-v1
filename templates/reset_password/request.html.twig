@@ -33,7 +33,16 @@
                         </label>
                         {{ form_row(requestForm.email) }}
                     </div>
-                    {{ form_row(requestForm.captcha) }}
+                    <div class="flex items-center space-x-2">
+                        {{ form_widget(requestForm.captcha) }}
+                    </div>
+                    <!-- invalid captcha -->
+                    {% if requestForm.captcha.vars.errors|length > 0 %}
+                    <div class="alert alert-error px-4 py-3 rounded relative" role="alert">
+                        <strong class="font-bold"><i class="fa-solid fa-exclamation-circle"></i></strong>
+                        <span class="block sm:inline">{{ requestForm.captcha.vars.errors|first.message }}</span>
+                    </div>
+                    {% endif %}
                     <button type="submit" class="w-full btn btn-lg btn-primary"><img src="{{ asset('build/images/tail-spin.svg') }}" alt="loading" class="w-7 h-7 mr-2 hidden">Reset password</button>
                     <a href="{{ path('app_login') }}"
                         class="block text-sm text-center text-gray-600 dark:text-gray-400 hover:underline">

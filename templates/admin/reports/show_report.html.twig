@@ -102,7 +102,7 @@
                             <td>{{ report.userReporting.email }}</td>
                             <td><span class="text-green-600">Utilisateur qui a signalé</span></td>
                             <td>
-                                <a href="{{ path('app_admin_user', {'id': report.userReporting.id}) }}" target="_blank" class="btn btn-sm btn-primary">Voir le profil</a>
+                                <a href="{{ path('app_admin_user', {'uuid': report.userReporting.uuid}) }}" target="_blank" class="btn btn-sm btn-primary">Voir le profil</a>
                             </td>
                         </tr>
                         <tr class="hover">
@@ -111,7 +111,7 @@
                             <td>{{ report.userReported.email }}</td>
                             <td><span class="text-red-600">Utilisateur signalé</span></td>
                             <td>
-                                <a href="{{ path('app_admin_user', {'id': report.userReported.id}) }}" target="_blank" class="btn btn-sm btn-primary">Voir le profil</a>
+                                <a href="{{ path('app_admin_user', {'uuid': report.userReported.uuid}) }}" target="_blank" class="btn btn-sm btn-primary">Voir le profil</a>
                             </td>
                         </tr>
                     </tbody>

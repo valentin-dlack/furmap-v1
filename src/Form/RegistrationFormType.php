@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use Doctrine\DBAL\Types\TextType;
+use Gregwar\CaptchaBundle\Type\CaptchaType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -71,6 +72,14 @@ class RegistrationFormType extends AbstractType
                 'class' => 'w-full input input-bordered focus:input-primary',
             ],
             'label' => false,
+        ])
+        ->add('captcha', CaptchaType::class, [
+            'label' => false,
+            'attr' => [
+                'class' => 'w-20 input input-bordered focus:input-primary ',
+                'placeholder' => 'Enter the captcha',
+            ],
+            'invalid_message' => 'Invalid captcha',
         ])
         ->add('plainPassword', PasswordType::class, [
             // instead of being set onto the object directly,

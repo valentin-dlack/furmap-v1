@@ -65,6 +65,15 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="flex items-center space-x-2">
+                            {{ form_widget(registrationForm.captcha) }}
+                        </div>
+                        {% if registrationForm.captcha.vars.errors|length > 0 %}
+                        <div class="alert alert-error px-4 py-3 rounded relative" role="alert">
+                            <strong class="font-bold"><i class="fa-solid fa-exclamation-circle"></i></strong>
+                            <span class="block sm:inline">{{ registrationForm.captcha.vars.errors|first.message }}</span>
+                        </div>
+                        {% endif %}
                         <button type="submit"
                             class="w-full btn btn-lg btn-primary">Register</button>
                         <p class="text-sm font-light text-gray-500 dark:text-gray-400">
