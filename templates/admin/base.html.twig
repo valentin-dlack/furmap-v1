@@ -30,9 +30,10 @@
 </head>
 
 <body>
-    <div class="drawer drawer-mobile">
+
+    <div class="drawer lg:drawer-open">
         <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
-        <div class="drawer-content flex flex-col">
+        <div class="drawer-content flex flex-col items-center">
             <!-- Page content here -->
             <div class="navbar bg-base-300">
                 <div class="flex-none">
@@ -53,8 +54,7 @@
         </div>
         <div class="drawer-side">
             <label for="my-drawer-2" class="drawer-overlay"></label>
-            <ul class="menu p-4 w-80 bg-base-300 text-base-content">
-                <!-- Title -->
+            <ul class="menu p-4 w-80 min-h-full bg-base-300 text-base-content">
                 <span class="btn btn-ghost text-lg mb-2">Menu</span>
                 <hr class="mb-2">
                 <li><a href="{{ path('app_admin') }}"
